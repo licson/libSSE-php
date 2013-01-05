@@ -16,7 +16,7 @@ class SSEUtils {
 	* @param $str the data to be processed
 	* @description Make strings SSE friendly (For internal use only)
 	*/
-	public function sseData($str){
+	static public function sseData($str){
 		return str_replace("\n","\ndata: ",$str);
 	}
 }

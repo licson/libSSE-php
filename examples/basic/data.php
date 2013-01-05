@@ -8,6 +8,7 @@ class TimeEvent extends SSEEvent {
 }
 
 $sse = new SSE();
+$sse->exec_limit=10;
 $sse->addEventListener('time',new TimeEvent());
 $sse->start();
 ?>
