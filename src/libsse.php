@@ -17,9 +17,9 @@ class SSE {
 	private $id = 0;//the event id
 	//seconds to sleep after the data has been sent
 	//default: 0.5 seconds
-	protected $sleep_time = 0.5;
-	protected $exec_limit = 600;//stop execution after 10 minutes
-	protected $client_reconnect = 1;//the time client to reconnect after connection has lost
+	public $sleep_time = 0.5;
+	public $exec_limit = 600;//stop execution after 10 minutes
+	public $client_reconnect = 1;//the time client to reconnect after connection has lost
 	public $is_reconnect = false;
 	
 	public function __construct(){
