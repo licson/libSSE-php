@@ -3,6 +3,12 @@ libSSE-php
 
 An easy-to-use, object-orienlated library for Server-Sent Events
 
+Updates
+=========
+
+1. Cleaner and improved code
+2. Add new event type: SSETimedEvent allows you to send data periodically in a easy way.
+
 Quick use
 ==========
 
@@ -45,15 +51,16 @@ However, polyfill for server-sent events is avaliable. Also on shared hosting, i
 Settings
 ===========
 
-After you created the libSSE instance, there's some settings for you to control the timing. Below is the settings provided by the library.
+After you created the libSSE instance, there's some settings for you to control the behaviour. Below is the settings provided by the library.
 
 	<?php
 	require_once('./src/libsse.php');
 	$sse = new SSE();
 	
 	$sse->exec_limit = 10; //the execution time of the loop in seconds. Default: 600. Set to 0 to allow the script to run as long as possible.
-	$sse->sleep_time = 1;//The time to sleep after the data has been sent in seconds. Default: 0.5.
-	$sse->client_reconnect = 10;//the time for the client to reconnect after the connection has lost in seconds. Default: 1.
+	$sse->sleep_time = 1; //The time to sleep after the data has been sent in seconds. Default: 0.5.
+	$sse->client_reconnect = 10; //the time for the client to reconnect after the connection has lost in seconds. Default: 1.
+	$sse->use_chunked_encodung = true; //Use chunked encoding. Some server may get problems with this and it defaults to false
 	?>
 
 As this library is new, only these settings are avaliable.
