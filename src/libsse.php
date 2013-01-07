@@ -18,13 +18,17 @@ class SSE {
 	//seconds to sleep after the data has been sent
 	//default: 0.5 seconds
 	public $sleep_time = 0.5;
-	public $exec_limit = 600;//stop execution after 10 minutes
-	public $client_reconnect = 1;//the time client to reconnect after connection has lost
+	///the time limit of the script in seconds
+	//default: 600
+	public $exec_limit = 600;
+	//the time client to reconnect after connection has lost in seconds
+	//default: 1
+	public $client_reconnect = 1;
 	public $is_reconnect = false;
 	
 	public function __construct(){
 		//if the HTTP header 'Last-Event-ID' is set
-		//then it's a reconnect from
+		//then it's a reconnect from the client
 		if(isset($_SERVER['HTTP_LAST_EVENT_ID'])){
 			$this->id = intval($_SERVER['HTTP_LAST_EVENT_ID']);
 			$this->is_reconnect = true;
@@ -34,7 +38,7 @@ class SSE {
 	* @method addEventListener
 	* @param $event the event name
 	* @param $handler the event handler, must be an instance of SSEEvent
-	* @description remove a event handler
+	* @description attach a event handler
 	*/
 	public function addEventListener($event,$handler){
 		if($handler instanceof SSEEvent){
@@ -70,7 +74,7 @@ class SSE {
 					$this->id++;
 					echo 'id: '.$this->id."\n";
 					if($event != '') echo 'event: '.$event."\n";
-					echo 'data: '.SSEUtils::sseData($data)."\n\n";//send the data
+					echo SSEUtils::sseData($data)."\n\n";//send the data
 				}
 			}
 			//flush the data out
