@@ -21,3 +21,19 @@ class SSEEvent {
 		return '';
 	}
 };
+
+/*
+* @class SSETimedEvent
+* @extends SSEEvent
+* @description Event class for regular updates
+*/
+
+class SSETimedEvent extends SSEEvent {
+	public $period = 1;
+	private $start = time();
+	
+	public function update(){
+		if((time() - $this->start) % $this->period == 0) return true;
+		else return false;
+	}
+};
