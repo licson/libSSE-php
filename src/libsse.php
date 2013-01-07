@@ -24,7 +24,11 @@ class SSE {
 	//the time client to reconnect after connection has lost in seconds
 	//default: 1
 	public $client_reconnect = 1;
+	//A read-only flag indicates whether the user reconnects
 	public $is_reconnect = false;
+	//Allow chunked encoding
+	//default: false
+	public $use_chunked_encoding = false;
 	
 	public function __construct(){
 		//if the HTTP header 'Last-Event-ID' is set
@@ -62,6 +66,7 @@ class SSE {
 		//send the proper header
 		header('Content-Type: text/event-stream');
 		header('Cache-Control: no-cache');
+		if($this->use_chunked_encoding) header('Transfer-encoding: chunked');
 		
 		$start = time();//record start time
 		
