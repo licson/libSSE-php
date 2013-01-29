@@ -77,9 +77,7 @@ class SSE {
 				if($handler->check()){//check if the data is avaliable
 					$data = $handler->update();//get the data
 					$this->id++;
-					echo 'id: '.$this->id."\n";
-					if($event != '') echo 'event: '.$event."\n";
-					echo SSEUtils::sseData($data)."\n\n";//send the data
+					echo SSEUtils::sseBlock($this->id,$event,$data);
 				}
 				else {
 					//No updates needed, send a comment to keep the connection alive.
