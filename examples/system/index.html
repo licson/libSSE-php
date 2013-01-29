@@ -1,0 +1,59 @@
+<html>
+<head>
+<style type="text/css">
+body {
+	margin: 0px;
+	padding: 0px;
+}
+#container {
+	width : 1000px;
+	height: 562.5px;
+	margin: auto;
+}
+</style>
+<script src="flotr2.min.js"></script>
+</head>
+
+<body>
+<div id="container"></div>
+<div id="log"></div>
+<script>
+var graph = document.getElementById('container');
+var log = document.getElementById('log');
+var source = new EventSource('./data.php');
+var data = [
+	//{data:[],label:'Current memory',points:{show:true},lines:{show:true}},
+	{data:[],label:'% load',points:{show:true},lines:{show:true}}
+];
+function print(str){
+	var fragment = document.createDocumentFragment();
+	var p = document.createElement('p');
+	p.textContent = str;
+	fragment.appendChild(p);
+	log.appendChild(fragment);
+}
+source.addEventListener('open', function(e){
+	print('Connection opened.');
+},false);
+source.addEventListener('data', function(e) {
+	var o = JSON.parse(e.data);
+	if(data[0].data.length >= 10){
+		data[0].data.shift();
+	}
+	data[0].data.push([o.time*1000,o.load]);
+	//data[1].data.push([o.time*1000,o.peak_memory]);
+	Flotr.draw(graph,data,{
+		xaxis:{
+			mode:'time'
+		},
+		mouse:{
+			track:true,
+			relative:true
+		},
+		title:'Server load'
+	});
+	//print('data arrived at '+new Date(o.time*1000).toString());
+}, false);
+</script>
+</body>
+</html>
