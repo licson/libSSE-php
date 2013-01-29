@@ -1,6 +1,7 @@
 <?php
 require_once('../../src/libsse.php');
-//Fix for those who are in windows
+
+//This function fixes those who are in windows
 function get_server_load() {
 		if (stristr(PHP_OS, 'win')) {
 			$wmi = new COM("Winmgmts://");
@@ -19,8 +20,8 @@ function get_server_load() {
 	return (int) $load;
 }
 
-class SysEvent extends SSETimedEvent {
-	public $period = 5;
+class SysEvent extends SSETimedEvent { //Beware: use SSETimedEvent for sending data at a regular interval
+	public $period = 5;//the interval in seconds
 	public function update(){
 		return json_encode(array('load'=>get_server_load(),'time'=>time()));
 	}

@@ -10,13 +10,97 @@ body {
 	height: 562.5px;
 	margin: auto;
 }
-</style>
+
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.php .de1, .php .de2 {color: #000060; font-weight: normal;}
+.php  {white-space: nowrap;border: 1px dotted #a0a0a0; font-family: 'Courier New', Courier, monospace; font-size: 110%; background-color: #f0f0f0; margin: 0; line-height: 110%; padding: 0;color: #000;}
+.php a:link {color: #006;}
+.php a:hover {background-color: #d6d6e6;}
+.php .head {font-family: Verdana, Arial, sans-serif; color: #808080; font-size: 70%; font-weight: bold; background-color: #f0f0ff; border-bottom: 1px solid #d0d0d0; padding: 2px;}
+.php .foot {font-family: Verdana, Arial, sans-serif; color: #808080; font-size: 70%; font-weight: bold; background-color: #f0f0ff; border-top: 1px solid #d0d0d0; padding: 2px;}
+.php .imp {font-weight: bold; color: red;}
+.php li, .php .li1 {font-family: 'Courier New', Courier, monospace; color: #000060; background-color: #e0e0e0; padding-bottom: 2px;}
+.php .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.php .kw1 {color: #b1b100;}
+.php .kw2 {color: #000000; font-weight: bold;}
+.php .kw3 {color: #990000;}
+.php .kw4 {color: #009900; font-weight: bold;}
+.php .co1 {color: #666666; font-style: italic;font-style: normal;}
+.php .co2 {color: #666666; font-style: italic;}
+.php .co3 {color: #0000cc; font-style: italic;}
+.php .co4 {color: #009933; font-style: italic;}
+.php .coMULTI {color: #666666; font-style: italic;font-style: normal;}
+.php .es0 {color: #000099; font-weight: bold;font-weight: normal;}
+.php .es1 {color: #000099; font-weight: bold;}
+.php .es2 {color: #660099; font-weight: bold;}
+.php .es3 {color: #660099; font-weight: bold;}
+.php .es4 {color: #006699; font-weight: bold;}
+.php .es5 {color: #006699; font-weight: bold; font-style: italic;}
+.php .es6 {color: #009933; font-weight: bold;}
+.php .es_h {color: #000099; font-weight: bold;}
+.php .br0 {color: #009900;}
+.php .sy0 {color: #339933;}
+.php .sy1 {color: #000000; font-weight: bold;}
+.php .st0 {color: #0000ff;}
+.php .st_h {color: #0000ff;}
+.php .nu0 {color: #cc66cc;}
+.php .nu8 {color: #208080;}
+.php .nu12 {color: #208080;}
+.php .nu19 {color:#800080;}
+.php .me1 {color: #004000;}
+.php .me2 {color: #004000;}
+.php .me {1}
+.php .re0 {color: #000088;}
+.php span.xtra { display:block; }
+	</style>
 <script src="flotr2.min.js"></script>
+<title>Server-Sent Events with libSSE - System load chart</title>
 </head>
 
 <body>
+<h1>Server-Sent Events with libSSE - System load chart</h1>
 <div id="container"></div>
 <div id="log"></div>
+<p>libSSE can be used to send data regularly to the client such as syncing data from client to server.</p>
+<p>In this example, the server sends back the system load every 5 seconds and display the data on a chart.</p>
+<h2>Source</h2>
+<ol class="php"><li class="li1"><div class="de1"><span class="kw2">&lt;?php</span></div></li>
+<li class="li1"><div class="de1"><span class="kw1">require_once</span><span class="br0">&#40;</span><span class="st_h">'../../src/libsse.php'</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="co1">//This function fixes those who are in windows</span></div></li>
+<li class="li1"><div class="de1"><span class="kw2">function</span> get_server_load<span class="br0">&#40;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">if</span> <span class="br0">&#40;</span><a href="http://www.php.net/stristr"><span class="kw3">stristr</span></a><span class="br0">&#40;</span><span class="kw4">PHP_OS</span><span class="sy0">,</span> <span class="st_h">'win'</span><span class="br0">&#41;</span><span class="br0">&#41;</span> <span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$wmi</span> <span class="sy0">=</span> <span class="kw2">new</span> COM<span class="br0">&#40;</span><span class="st0">&quot;Winmgmts://&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$server</span> <span class="sy0">=</span> <span class="re0">$wmi</span><span class="sy0">-&gt;</span><span class="me1">execquery</span><span class="br0">&#40;</span><span class="st0">&quot;SELECT LoadPercentage FROM Win32_Processor&quot;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$cpu_num</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$load_total</span> <span class="sy0">=</span> <span class="nu0">0</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">foreach</span><span class="br0">&#40;</span><span class="re0">$server</span> <span class="kw1">as</span> <span class="re0">$cpu</span><span class="br0">&#41;</span><span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$cpu_num</span><span class="sy0">++;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$load_total</span> <span class="sy0">+=</span> <span class="re0">$cpu</span><span class="sy0">-&gt;</span><span class="me1">loadpercentage</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$load</span> <span class="sy0">=</span> <a href="http://www.php.net/round"><span class="kw3">round</span></a><span class="br0">&#40;</span><span class="re0">$load_total</span><span class="sy0">/</span><span class="re0">$cpu_num</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span> <span class="kw1">else</span> <span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$sys_load</span> <span class="sy0">=</span> sys_getloadavg<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="re0">$load</span> <span class="sy0">=</span> <span class="re0">$sys_load</span><span class="br0">&#91;</span><span class="nu0">0</span><span class="br0">&#93;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span> &nbsp; &nbsp;</div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <span class="br0">&#40;</span>int<span class="br0">&#41;</span> <span class="re0">$load</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="kw2">class</span> SysEvent <span class="kw2">extends</span> SSETimedEvent <span class="br0">&#123;</span> <span class="co1">//Beware: use SSETimedEvent for sending data at a regular interval</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">public</span> <span class="re0">$period</span> <span class="sy0">=</span> <span class="nu0">5</span><span class="sy0">;</span><span class="co1">//the interval in seconds</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">public</span> <span class="kw2">function</span> update<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#123;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span> <a href="http://www.php.net/json_encode"><span class="kw3">json_encode</span></a><span class="br0">&#40;</span><a href="http://www.php.net/array"><span class="kw3">array</span></a><span class="br0">&#40;</span><span class="st_h">'load'</span><span class="sy0">=&gt;</span>get_server_load<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">,</span><span class="st_h">'time'</span><span class="sy0">=&gt;</span><a href="http://www.php.net/time"><span class="kw3">time</span></a><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">&#125;</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+<li class="li1"><div class="de1"><span class="re0">$sse</span> <span class="sy0">=</span> <span class="kw2">new</span> SSE<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1"><span class="re0">$sse</span><span class="sy0">-&gt;</span><span class="me1">addEventListener</span><span class="br0">&#40;</span><span class="st_h">'data'</span><span class="sy0">,</span><span class="kw2">new</span> SysEvent<span class="br0">&#40;</span><span class="br0">&#41;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1"><span class="re0">$sse</span><span class="sy0">-&gt;</span><span class="me1">start</span><span class="br0">&#40;</span><span class="br0">&#41;</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1"><span class="sy1">?&gt;</span></div></li>
+</ol>
 <script>
 var graph = document.getElementById('container');
 var log = document.getElementById('log');
