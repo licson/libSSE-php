@@ -7,7 +7,8 @@ Updates
 =========
 
 1. Cleaner and improved code
-2. Add new event type: SSETimedEvent allows you to send data periodically in a easy way.
+2. Fixes error when using SSETimedEvent
+3. Add one example
 
 Quick use
 ==========
