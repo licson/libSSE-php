@@ -10,6 +10,8 @@ Updates
 2. Fixes error when using SSETimedEvent
 3. Add one example
 
+Examples are hosted opn my website now! [Check them in action!](http://serve-licson.net23.net/demos/libsse/examples/)
+
 Quick use
 ==========
 
