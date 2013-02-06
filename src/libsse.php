@@ -6,6 +6,7 @@
 */
 require_once('sse_events.php');
 require_once('sse_utils.php');
+require_once('sse_data.php');
 
 /*
 * @class SSE

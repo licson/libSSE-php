@@ -1,0 +1,65 @@
+<html>
+	<head>
+		<title>Chat system with libSSE</title>
+		<meta charset="utf-8" />
+		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" type="text/css" rel="stylesheet" />
+		<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" type="text/css" rel="stylesheet" />
+		<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+		<script>
+		$(function(){
+			var data = new EventSource('./send.php');
+			$('#start').click(function(){
+				$.ajax({
+					url:'./recv.php',
+					type:'POST',
+					data:{
+						user: $('#user').val()
+					},
+					success:function(){
+						$('#welcome').fadeOut(500);
+						$('#chat').fadeIn(500);
+					}
+				});
+			});
+			$('#message').submit(function(e){
+				e.preventDefault();
+				$.ajax({
+					url:'./recv.php',
+					type:'POST',
+					data:{
+						message: $('#msg').val()
+					},
+					success:$.noop
+				});
+			});
+			data.addEventListener('user',function(e){
+				$('#latest').html('Current User: '+e.data);
+			},false);
+			data.addEventListener('message',function(e){
+				$('#lines').append($('<p>',{text:e.data}));
+			},false);
+		});
+		</script>
+	</head>
+	
+	<body>
+		<div class="container">
+			<div id="welcome">
+				<h1>Welcome to the chat system!</h1>
+				<p>Please enter your name first:</p>
+				<input type="text" id="user"/>
+				<button id="start">Proceed</button>
+			</div>
+			<div id="chat" style="display: none;">
+				<h1>Chat</h1>
+				<form id="message">
+					<input id="msg" type="text" />
+					<input type="submit" value="Send"/>
+				</form>
+				<div id="lines">
+				</div>
+				<div class="well" id="latest"></div>
+			</div>
+		</div>
+	</body>
+</html>
