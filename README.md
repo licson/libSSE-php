@@ -6,11 +6,11 @@ An easy-to-use, object-orienlated library for Server-Sent Events
 Updates
 =========
 
-1. Cleaner and improved code
-2. Fixes error when using SSETimedEvent
-3. Add one example
+1. Add new functionality: cross-script communication is now possible with SSEData which currently uses a MySQL database to store data. It can be easily extended to use other medium to store data such as files.
+2. Add example that demostratrs the new functionality: a chatroom build with libSSE in less than 100 lines of PHP code!
+3. Cleaner code
 
-Examples are hosted opn my website now! [Check them in action!](http://serve-licson.net23.net/demos/libsse/examples/)
+Examples are hosted on my website now! [Check them in action!](http://serve-licson.net23.net/demos/libsse/examples/)
 
 Quick use
 ==========
@@ -51,6 +51,11 @@ Compatibility
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
 However, polyfill for server-sent events is avaliable. Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted. There's some settings in the library that can fix it.
 
+Development
+============
+
+This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
+
 Settings
 ===========
 
@@ -67,8 +72,3 @@ After you created the libSSE instance, there's some settings for you to control 
 	?>
 
 As this library is new, only these settings are avaliable.
-
-Development
-============
-
-This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs.
