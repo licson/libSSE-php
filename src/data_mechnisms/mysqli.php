@@ -63,7 +63,7 @@ class SSEData_MySQLi {
 	
 	public function set($key,$value){
 		if($this->get($key)){
-			return mysqli_query($this->conn,sprintf("UPDATE `sse_data_table` SET `key` = '%s', `value` = '%s'",$this->escape($key),$this->escape($value)));
+			return mysqli_query($this->conn,sprintf("UPDATE `sse_data_table` SET `value` = '%s' WHERE `key` = '%s'",$this->escape($value),$this->escape($key)));
 		}
 		else {
 			return mysqli_query($this->conn,sprintf("INSERT INTO `sse_data_table` SET `key` = '%s', `value` = '%s'",$this->escape($key),$this->escape($value)));

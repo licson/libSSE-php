@@ -16,17 +16,30 @@ require_once('sse_data.php');
 class SSE {
 	private $_handlers = array();
 	private $id = 0;//the event id
+	
 	//seconds to sleep after the data has been sent
 	//default: 0.5 seconds
 	public $sleep_time = 0.5;
+	
 	///the time limit of the script in seconds
 	//default: 600
 	public $exec_limit = 600;
+	
 	//the time client to reconnect after connection has lost in seconds
 	//default: 1
 	public $client_reconnect = 1;
+	
+	//Allow Cross-Origin Access?
+	//Default: false
+	public $allow_cors = false;
+	
+	//The interval of sending a signal to keep the connection alive
+	//default: 300 seconds
+	public $keep_alive_time = 300;
+	
 	//A read-only flag indicates whether the user reconnects
 	public $is_reconnect = false;
+	
 	//Allow chunked encoding
 	//default: false
 	public $use_chunked_encoding = false;
@@ -67,12 +80,25 @@ class SSE {
 		//send the proper header
 		header('Content-Type: text/event-stream');
 		header('Cache-Control: no-cache');
+		if($this->allow_cors){
+			header('Access-Control-Allow-Origin: *');
+			header('Access-Control-Allow-Credentials: true');
+		};
 		if($this->use_chunked_encoding) header('Transfer-encoding: chunked');
 		
+		//prevent buffering
+		if(function_exists('apache_setenv')){
+			@apache_setenv('no-gzip',1);
+		}
+		@ini_set('zlib.output_compression',0);
+		@ini_set('implicit_flush',1);
+		for($i = 0; $i < ob_get_level(); $i++){
+			ob_end_flush();
+		}
+		ob_implicit_flush(1);
+		
 		$start = time();//record start time
-		
-		echo 'retry: '.($this->client_reconnect*1000)."\n";
-		
+		echo 'retry: '.($this->client_reconnect*1000)."\n";	
 		while(true){//keep the script running
 			foreach($this->_handlers as $event=>$handler){
 				if($handler->check()){//check if the data is avaliable
@@ -81,14 +107,13 @@ class SSE {
 					echo SSEUtils::sseBlock($this->id,$event,$data);
 				}
 				else {
-					//No updates needed, send a comment to keep the connection alive.
-					//From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
-					echo ': '.sha1(mt_rand())."\n\n";
+					if(time() - $start % $this->keep_alive_time == 0){
+						//No updates needed, send a comment to keep the connection alive.
+						//From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
+						echo ': '.sha1(mt_rand())."\n\n";
+					}
 				}
-			}
-			//flush the data out
-			ob_flush();
-			flush();
+			}	
 			//break if the time excceed the limit
 			if($this->exec_limit != 0 && time() - $start > $this->exec_limit) break;
 			//sleep
