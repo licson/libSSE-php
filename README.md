@@ -12,6 +12,11 @@ Updates
 
 Examples are hosted on my website now! [Check them in action!](http://serve-licson.net23.net/demos/libsse/examples/)
 
+Development
+============
+
+This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
+
 Quick use
 ==========
 
@@ -45,17 +50,6 @@ Client-side(javascript):
 		//handle your data here
 	},false);
 
-Compatibility
-==============
-
-Because server-sent events is a new standard and still in flux, only certain browsers support it.
-However, polyfill for server-sent events is avaliable. Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted. There's some settings in the library that can fix it.
-
-Development
-============
-
-This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
-
 Settings
 ===========
 
@@ -72,3 +66,9 @@ After you created the libSSE instance, there's some settings for you to control 
 	$sse->keep_alive_time = 600; //The interval of sending a signal to keep the connection alive. Default: 300 seconds.
 	$sse->allow_cors = true; //Allow cross-domain access? Default: false. If you want others to access this must set to true.
 	?>
+
+Compatibility
+==============
+
+Because server-sent events is a new standard and still in flux, only certain browsers support it.
+However, polyfill for server-sent events is avaliable. Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted. There's some settings in the library that can fix it.
