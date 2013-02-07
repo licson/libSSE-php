@@ -69,6 +69,6 @@ After you created the libSSE instance, there's some settings for you to control 
 	$sse->sleep_time = 1; //The time to sleep after the data has been sent in seconds. Default: 0.5.
 	$sse->client_reconnect = 10; //the time for the client to reconnect after the connection has lost in seconds. Default: 1.
 	$sse->use_chunked_encodung = true; //Use chunked encoding. Some server may get problems with this and it defaults to false
+	$sse->keep_alive_time = 600; //The interval of sending a signal to keep the connection alive. Default: 300 seconds.
+	$sse->allow_cors = true; //Allow cross-domain access? Default: false. If you want others to access this must set to true.
 	?>
-
-As this library is new, only these settings are avaliable.
