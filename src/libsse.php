@@ -104,10 +104,10 @@ class SSE {
 				if($handler->check()){//check if the data is avaliable
 					$data = $handler->update();//get the data
 					$this->id++;
-					echo SSEUtils::sseBlock($this->id,$event,$data);
+					SSEUtils::sseBlock($this->id,$event,$data);
 				}
 				else {
-					if(time() - $start % $this->keep_alive_time == 0){
+					if(SSEUtils::time_mod($start,$this->keep_alive_time) == 0){
 						//No updates needed, send a comment to keep the connection alive.
 						//From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
 						echo ': '.sha1(mt_rand())."\n\n";
@@ -115,7 +115,7 @@ class SSE {
 				}
 			}	
 			//break if the time excceed the limit
-			if($this->exec_limit != 0 && time() - $start > $this->exec_limit) break;
+			if($this->exec_limit != 0 && SSEUtils::time_diff($start) > $this->exec_limit) break;
 			//sleep
 			usleep($this->sleep_time*1000000);
 		}

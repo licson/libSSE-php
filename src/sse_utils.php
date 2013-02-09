@@ -31,4 +31,21 @@ class SSEUtils {
 		if($event != '') echo 'event: '.$event."\n";
 		echo self::sseData($data)."\n\n";//send the data
 	}
+	/*
+	* @method SSEUtils::time_mod
+	* @param $start the start timestamp
+	* @param $n the time interval
+	* @description Calculate the modulus of time
+	*/
+	static public function time_mod($start,$n){
+		return (time() - $start) % $n;
+	}
+	/*
+	* @method SSEUtils::time_diff
+	* @param $start the start timestamp
+	* @description Calculate the time difference
+	*/
+	static public function time_diff($start){
+		return time() - $start;
+	}
 }
