@@ -34,7 +34,7 @@ class SSETimedEvent extends SSEEvent {
 	
 	public function check(){
 		if($this->start === 0) $this->start = time();
-		if((time() - $this->start) % $this->period == 0) return true;
+		if(SSEUtils::time_mod($this->start,$this->period) == 0) return true;
 		else return false;
 	}
 };
