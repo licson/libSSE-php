@@ -11,6 +11,7 @@ require_once('sse_data.php');
 require_once('data_mechnisms/mysql.php');
 require_once('data_mechnisms/mysqli.php');
 require_once('data_mechnisms/file.php');
+require_once('data_mechnisms/apc.php');
 
 /*
 * @class SSE
