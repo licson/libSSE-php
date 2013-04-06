@@ -6,12 +6,11 @@ An easy-to-use, object-orienlated library for Server-Sent Events
 Updates
 =========
 
-1. Add new functionality: cross-script communication is now possible with SSEData which currently uses a MySQL database to store data. It can be easily extended to use other medium to store data such as files.
+1. Add new functionality: cross-script communication is now possible with SSEData.
 2. Add example that demostratrs the new functionality: a chatroom build with libSSE in less than 100 lines of PHP code!
 3. Cleaner code
 4. Add documentation. [Check it here](https://github.com/licson0729/libSSE-php/wiki/libSSE-docs)
-
-Examples are hosted on my website now! [Check them in action!](http://serve-licson.net23.net/demos/libsse/examples/)
+5. Improved code in output buffering.
 
 Development
 ============
