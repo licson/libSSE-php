@@ -10,7 +10,7 @@ Updates
 2. Add example that demostratrs the new functionality: a chatroom build with libSSE in less than 100 lines of PHP code!
 3. Cleaner code
 4. Add documentation. [Check it here](https://github.com/licson0729/libSSE-php/wiki/libSSE-docs)
-5. Improved code in output buffering.
+5. Improved code on output buffering.
 
 Development
 ============
