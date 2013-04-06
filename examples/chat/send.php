@@ -1,7 +1,7 @@
 <?php
 require_once('../../src/libsse.php');
 
-$GLOBALS['data'] = new SSEData('mysqli',array('host'=>'127.0.0.1','user'=>'root','password'=>'','db'=>'main'));
+$GLOBALS['data'] = new SSEData('file',array('path'=>'./data'));
 $sse = new SSE();
 
 class LatestUser extends SSEEvent {
@@ -36,6 +36,7 @@ class LatestMessage extends SSEEvent {
 	}
 };
 
+$sse->exec_limit = 30;
 $sse->addEventListener('user',new LatestUser());
 $sse->addEventListener('',new LatestMessage());
 $sse->start();

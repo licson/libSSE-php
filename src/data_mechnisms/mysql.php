@@ -6,7 +6,7 @@
 */
 
 /*
-* @class SSEData
+* @class SSEData_MySQL
 * @description The MySQL data mechnism
 */
 
@@ -72,7 +72,7 @@ class SSEData_MySQL {
 	* @description prepare the table to store data
 	*/
 	private function prepare(){
-		return (bool)(mysql_query('CREATE TABLE IF NOT EXISTS `sse_data_table` (`key` varchar(50) NOT NULL, `value` text, PRIMARY KEY (`key`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;',$this->conn));
+		return (bool)(mysql_query('CREATE TABLE IF NOT EXISTS `sse_data_table` (`key` varchar(50) NOT NULL, `value` text, PRIMARY KEY (`key`) ) ENGINE=MEMORY DEFAULT CHARSET=utf8;',$this->conn));
 	}
 	/*
 	* @method SSEData_MySQL::get
@@ -108,5 +108,6 @@ class SSEData_MySQL {
 		return mysql_query(sprintf('DELETE FROM `sse_data_table` WHERE `key` == \'%s\'',$this->escape($key)),$this->conn);
 	}
 };
+
 //register the module
 SSEData::register('mysql','SSEData_MySQL');

@@ -7,6 +7,10 @@
 require_once('sse_events.php');
 require_once('sse_utils.php');
 require_once('sse_data.php');
+//load the data modules in
+require_once('data_mechnisms/mysql.php');
+require_once('data_mechnisms/mysqli.php');
+require_once('data_mechnisms/file.php');
 
 /*
 * @class SSE
@@ -62,6 +66,9 @@ class SSE {
 		if($handler instanceof SSEEvent){
 			$this->_handlers[$event] = $handler;
 		}
+		else {
+			throw new Exception('An event handler must be an instance of SSEEvent.');
+		}
 	}
 	/*
 	* @method SSE::removeEventListener
@@ -77,6 +84,7 @@ class SSE {
 	*/
 	public function start(){
 		@set_time_limit(0);//disable time limit
+		
 		//send the proper header
 		header('Content-Type: text/event-stream');
 		header('Cache-Control: no-cache');
@@ -98,22 +106,31 @@ class SSE {
 		ob_implicit_flush(1);
 		
 		$start = time();//record start time
-		echo 'retry: '.($this->client_reconnect*1000)."\n";	
-		while(true){//keep the script running
+		echo 'retry: '.($this->client_reconnect*1000)."\n";	//set the retry interval for the client
+		
+		//keep the script running
+		while(true){
+			if(SSEUtils::time_mod($start,$this->keep_alive_time) == 0){
+				//No updates needed, send a comment to keep the connection alive.
+				//From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
+				echo ': '.sha1(mt_rand())."\n\n";
+			}
+			
+			//start to check for updates
 			foreach($this->_handlers as $event=>$handler){
 				if($handler->check()){//check if the data is avaliable
 					$data = $handler->update();//get the data
 					$this->id++;
 					SSEUtils::sseBlock($this->id,$event,$data);
+					//make sure the data has been sent to the client
+					@ob_flush();
+					@flush();
 				}
 				else {
-					if(SSEUtils::time_mod($start,$this->keep_alive_time) == 0){
-						//No updates needed, send a comment to keep the connection alive.
-						//From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
-						echo ': '.sha1(mt_rand())."\n\n";
-					}
+					continue;
 				}
-			}	
+			}
+			
 			//break if the time excceed the limit
 			if($this->exec_limit != 0 && SSEUtils::time_diff($start) > $this->exec_limit) break;
 			//sleep

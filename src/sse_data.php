@@ -63,7 +63,3 @@ class SSEData {
 		$this->mech->delete($key);
 	}
 };
-
-//load the data modules in
-require_once('data_mechnisms/mysql.php');
-require_once('data_mechnisms/mysqli.php');

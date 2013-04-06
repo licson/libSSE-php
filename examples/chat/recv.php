@@ -1,7 +1,7 @@
 <?php
 require_once('../../src/libsse.php');
 
-$data = new SSEData('mysqli',array('host'=>'127.0.0.1','user'=>'root','password'=>'','db'=>'main'));
+$data = new SSEData('file',array('path'=>'./data'));
 
 if(isset($_POST['user']) && !isset($_POST['message'])){
 	$data->set('user',json_encode(array('msg'=>htmlentities($_POST['user']),'time'=>time())));

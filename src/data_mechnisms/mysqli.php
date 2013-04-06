@@ -67,7 +67,7 @@ class SSEData_MySQLi {
 	* @description prepare the table to store data
 	*/
 	private function prepare(){
-		return (bool)(mysqli_query($this->conn,'CREATE TABLE IF NOT EXISTS `sse_data_table` (`key` varchar(50) NOT NULL, `value` text, PRIMARY KEY (`key`) ) ENGINE=MyISAM DEFAULT CHARSET=utf8;'));
+		return (bool)(mysqli_query($this->conn,'CREATE TABLE IF NOT EXISTS `sse_data_table` (`key` varchar(50) NOT NULL, `value` text, PRIMARY KEY (`key`) ) ENGINE=MEMORY DEFAULT CHARSET=utf8;'));
 	}
 	/*
 	* @method SSEData_MySQLi::get
