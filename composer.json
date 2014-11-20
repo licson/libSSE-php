@@ -1,0 +1,7 @@
+{
+    "name": "licson0729/libSSE",
+    "description": "An easy-to-use, object-orienlated library for Server-Sent Events",
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
