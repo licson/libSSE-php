@@ -101,7 +101,7 @@ class SSE {
 		}
 		@ini_set('zlib.output_compression',0);
 		@ini_set('implicit_flush',1);
-		for($i = 0; $i < ob_get_level(); $i++){
+                while (ob_get_level() != 0) {
 			ob_end_flush();
 		}
 		ob_implicit_flush(1);
