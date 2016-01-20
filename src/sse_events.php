@@ -10,13 +10,13 @@
 * @description The event placeholder class
 */
 
-class SSEEvent {	
-	public function check(){
+abstract class SSEEvent {	
+	abstract public function check(){
 		//data always updates
 		return true;
 	}
 	
-	public function update(){
+	abstract public function update(){
 		//returns nothing
 		return '';
 	}
@@ -37,4 +37,6 @@ class SSETimedEvent extends SSEEvent {
 		if(SSEUtils::time_mod($this->start,$this->period) == 0) return true;
 		else return false;
 	}
+
+	public function update(){};
 };
