@@ -11,9 +11,9 @@
 */
 
 abstract class SSEEvent {	
-	abstract public function check(){};
+	abstract public function check();
 	
-	abstract public function update(){};
+	abstract public function update();
 };
 
 /*
@@ -32,5 +32,7 @@ class SSETimedEvent extends SSEEvent {
 		else return false;
 	}
 
-	public function update(){};
+	public function update(){
+		return;
+	}
 };
