@@ -11,15 +11,9 @@
 */
 
 abstract class SSEEvent {	
-	abstract public function check(){
-		//data always updates
-		return true;
-	}
+	abstract public function check(){};
 	
-	abstract public function update(){
-		//returns nothing
-		return '';
-	}
+	abstract public function update(){};
 };
 
 /*
