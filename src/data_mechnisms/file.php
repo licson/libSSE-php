@@ -71,6 +71,10 @@ class SSEData_File {
 	* @description remove keys that are unused for a specified period
 	*/
 	private function gc(){
+		if($this->gc_lifeime == 0){
+			return;
+		}
+
 		foreach(glob($this->path.'/sess_*') as $file){
 			if(filemtime($file)+$this->gc_lifetime < time() && file_exists($file)){
 				unlink($file);
