@@ -71,7 +71,7 @@ class SSEData_File {
 	* @description remove keys that are unused for a specified period
 	*/
 	private function gc(){
-		if($this->gc_lifeime == 0){
+		if($this->gc_lifetime == 0){
 			return;
 		}
 
