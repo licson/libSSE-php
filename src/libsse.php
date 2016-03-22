@@ -4,14 +4,14 @@
 * @author Licson Lee <licson0729@gmail.com>
 * @description A PHP library for handling Server-Sent Events (SSE)
 */
-require_once('sse_events.php');
-require_once('sse_utils.php');
-require_once('sse_data.php');
+require_once(__DIR__ . '/sse_events.php');
+require_once(__DIR__ . '/sse_utils.php');
+require_once(__DIR__ . '/sse_data.php');
 //load the data modules in
-require_once('data_mechnisms/mysql.php');
-require_once('data_mechnisms/mysqli.php');
-require_once('data_mechnisms/file.php');
-require_once('data_mechnisms/apc.php');
+require_once(__DIR__ . '/data_mechnisms/mysql.php');
+require_once(__DIR__ . '/data_mechnisms/mysqli.php');
+require_once(__DIR__ . '/data_mechnisms/file.php');
+require_once(__DIR__ . '/data_mechnisms/apc.php');
 
 /*
 * @class SSE
