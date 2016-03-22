@@ -29,7 +29,7 @@
     "php": ">=5.3"
   },
   "autoload": {
-    "file": [
+    "files": [
       "src/libsse.php"
     ]
   }
