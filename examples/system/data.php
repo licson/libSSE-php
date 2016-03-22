@@ -1,5 +1,8 @@
 <?php
-require_once('../../src/libsse.php');
+require_once('../../vendor/autoload.php');
+
+use Sse\Events\TimedEvent;
+use Sse\SSE;
 
 //This function fixes those who are in windows
 function get_server_load() {
@@ -20,7 +23,7 @@ function get_server_load() {
 	return (int) $load;
 }
 
-class SysEvent extends SSETimedEvent { //Beware: use SSETimedEvent for sending data at a regular interval
+class SysEvent extends TimedEvent { //Beware: use SSETimedEvent for sending data at a regular interval
 	public $period = 5;//the interval in seconds
 	public function update(){
 		return json_encode(array('load'=>get_server_load(),'time'=>time()));

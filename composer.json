@@ -1,7 +1,7 @@
 {
   "name": "tonyhhyip/sse",
   "description": "An easy-to-use, object-orienlated library for Server-Sent Events",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "type": "library",
   "keywords": ["sse"],
   "homepage": "https://github.com/tonyhhyip/libSSE-php",
@@ -29,8 +29,8 @@
     "php": ">=5.3"
   },
   "autoload": {
-    "files": [
-      "src/libsse.php"
-    ]
+    "psr-4": {
+      "Sse\\": "src/"
+    }
   }
 }
