@@ -11,10 +11,13 @@ $sse = new SSE();
 
 class LatestUser implements Event {
     private $cache = 0;
+
     private $data;
+
     public function update(){
         return $this->data->msg;
     }
+
     public function check(){
         $this->data = json_decode($GLOBALS['data']->get('user'));
         if($this->data->time !== $this->cache){
@@ -28,9 +31,11 @@ class LatestUser implements Event {
 class LatestMessage implements Event {
     private $cache = 0;
     private $data;
+
     public function update(){
         return json_encode($this->data);
     }
+
     public function check(){
         $this->data = json_decode($GLOBALS['data']->get('message'));
         if($this->data->time !== $this->cache){

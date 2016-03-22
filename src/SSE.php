@@ -141,7 +141,7 @@ class SSE {
                 if($handler->check()){//check if the data is avaliable
                     $data = $handler->update();//get the data
                     $this->id++;
-                    Utils::sseBlock($this->id,$event,$data);
+                    Utils::sseBlock($this->id, $data, $event);
                     //make sure the data has been sent to the client
                     @ob_flush();
                     @flush();
