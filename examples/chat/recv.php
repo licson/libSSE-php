@@ -1,7 +1,10 @@
 <?php
-require_once('../../src/libsse.php');
 
-$data = new SSEData('file',array('path'=>'./data'));
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use Sse\Data;
+
+$data = new Data('file',array('path'=>'./data'));
 
 if(isset($_POST['user']) && !isset($_POST['message'])){
 	$data->set('user',json_encode(array('msg'=>htmlentities($_POST['user']),'time'=>time())));
