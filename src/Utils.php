@@ -58,7 +58,7 @@ abstract class Utils
     {
         static::sseSend("id: $id\n");
         if (strlen($name) && $name !== null) {
-            static::sseSend('event: $event\n');
+            static::sseSend("event: $name\n");
         }
 
         static::sseSend(static::sseData($data) . "\n\n");
