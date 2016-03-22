@@ -1,0 +1,36 @@
+{
+  "name": "tonyhhyip/sse",
+  "description": "An easy-to-use, object-orienlated library for Server-Sent Events",
+  "version": "1.0.0",
+  "type": "library",
+  "keywords": ["sse"],
+  "homepage": "https://github.com/tonyhhyip/libSSE-php",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Licson Lee",
+      "email": "licson0729@gmail.com",
+      "homepage": "https://licson.net/",
+      "role": "Owner"
+    },
+    {
+      "name": "Tony Yip",
+      "email": "tony@opensource.hk",
+      "homepage": "https://github.com/tonyhhyip",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "tony@opensource.hk",
+    "issues": "https://github.com/licson0729/libSSE-php/issues/new",
+    "source": "https://github.com/tonyhhyip/libSSE-php"
+  },
+  "require": {
+    "php": ">=5.3"
+  },
+  "autoload": {
+    "files": [
+      "src/libsse.php"
+    ]
+  }
+}
