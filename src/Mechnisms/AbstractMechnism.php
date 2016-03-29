@@ -38,6 +38,20 @@ use Sse\DataInterface;
 
 abstract class AbstractMechnism implements DataInterface
 {
+
+    /**
+     * Seconds of inactive timeout
+     * @var int
+     */
+    protected $lifetime = 6000;
+
+    public function __construct(array $parameter)
+    {
+        if (array_key_exists('gc_lifetime', $parameter)) {
+            $this->lifetime = $parameter['gc_lifetime'];
+        }
+    }
+
     public function __get($key)
     {
         return $this->get($key);

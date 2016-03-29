@@ -34,22 +34,17 @@
 namespace Sse\Mechnisms;
 
 use Predis\Client;
-use Sse\DataInterface;
 
 class RedisMechnism extends AbstractMechnism
 {
 
     private $client;
 
-    private $lifetime = 60;
 
     public function __construct(array $param)
     {
-        if (isset($param['lifetime'])) {
-            $this->lifetime = $param['lifetime'];
-            unset($param['lifetime']);
-        }
-        $this->client = new Client($param);
+        parent::__construct($param);
+        $this->client = new Client($param['server']);
     }
 
     public function get($key)
