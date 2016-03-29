@@ -31,16 +31,44 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\Mechnisms;
 
+use Predis\Client;
+use Sse\DataInterface;
 
-interface DataInterface
+class RedisMechnism extends AbstractMechnism
 {
-    public function get($key);
 
-    public function set($key, $value);
+    private $client;
 
-    public function delete($key);
+    private $lifetime = 60;
 
-    public function has($key);
+    public function __construct(array $param)
+    {
+        if (isset($param['lifetime'])) {
+            $this->lifetime = $param['lifetime'];
+            unset($param['lifetime']);
+        }
+        $this->client = new Client($param);
+    }
+
+    public function get($key)
+    {
+        return $this->client->get($key);
+    }
+
+    public function set($key, $value)
+    {
+        return $this->client->setex($key, $this->lifetime, $value);
+    }
+
+    public function delete($key)
+    {
+        return $this->client->del($key);
+    }
+
+    public function has($key)
+    {
+        return $this->client->exists($key);
+    }
 }

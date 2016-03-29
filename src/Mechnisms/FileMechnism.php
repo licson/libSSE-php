@@ -36,7 +36,7 @@ namespace Sse\Mechnisms;
 
 use Sse\DataInterface;
 
-class FileMechnism implements DataInterface
+class FileMechnism extends AbstractMechnism
 {
     private $path;
     
@@ -76,12 +76,19 @@ class FileMechnism implements DataInterface
         return $result;
     }
 
-    public function delete($key){
-        $path = $this->path.'/sess_'.sha1($key);
+    public function delete($key)
+    {
+        $path = $this->getFileName($key);
         if(file_exists($path)){
             unlink($path);
         }
         return true;
+    }
+
+    public function has($key)
+    {
+        $file = $this->getFileName($key);
+        return file_exists($file);
     }
 
     private function gc(){
