@@ -39,22 +39,17 @@ use Sse\DataInterface;
 class FileMechnism extends AbstractMechnism
 {
     private $path;
-    
-    private $lifetime;
 
     public function __construct(array $arguments)
     {
         if (!array_key_exists('path', $arguments)) {
             throw new \InvalidArgumentException('Key path does not exists in arguments');
         }
+        parent::__construct($arguments);
 
         $this->path = $arguments['path'];
         if (!is_dir($this->path)) {
             mkdir($this->path);
-        }
-
-        if (array_key_exists('gc_lifetime', $arguments)) {
-            $this->lifetime = $arguments['gc_lifetime'];
         }
     }
 

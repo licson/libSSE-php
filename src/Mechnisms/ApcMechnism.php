@@ -38,8 +38,12 @@ use Sse\DataInterface;
 
 class ApcMechnism extends AbstractMechnism
 {
+
+    protected $lifetime = 0;
+
     public function __construct(array $args)
     {
+        parent::__construct($args);
         if (!extension_loaded('apc')) {
             throw new \RuntimeException('Unable to use ApcMechnism as APC is disabled');
         }
@@ -52,7 +56,7 @@ class ApcMechnism extends AbstractMechnism
 
     public function set($key, $value)
     {
-        return apc_store($key, $value);
+        return apc_store($key, $value, $this->lifetime);
     }
 
     public function delete($key)

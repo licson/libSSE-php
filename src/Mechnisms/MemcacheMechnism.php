@@ -40,13 +40,11 @@ class MemcacheMechnism extends AbstractMechnism
 
     private $connection;
 
-    private $lifetime = 0;
+    protected $lifetime = 0;
 
     public function __construct(array $parameter)
     {
-        if (isset($param['lifetime'])) {
-            $this->lifetime = $param['lifetime'];
-        }
+        parent::__construct($parameter);
         $this->connection = isset($parameter['memcache_id']) ? new Memcached($parameter['memcache_id']) : new Memcached;
         if (isset($parameter['server'])) {
             $this->connection->addServers($parameter['server']);
