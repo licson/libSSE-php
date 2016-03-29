@@ -36,7 +36,7 @@ namespace Sse\Mechnisms;
 
 use Sse\DataInterface;
 
-class ApcMechnism implements DataInterface
+class ApcMechnism extends AbstractMechnism
 {
     public function __construct(array $args)
     {
@@ -55,7 +55,13 @@ class ApcMechnism implements DataInterface
         return apc_store($key, $value);
     }
 
-    public function delete($key){
+    public function delete($key)
+    {
         return apc_delete($key);
+    }
+
+    public function has($key)
+    {
+        return apc_exists($key);
     }
 }

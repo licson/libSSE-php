@@ -105,4 +105,29 @@ class Data implements DataInterface
     {
         return $this->mechnism->delete($key);
     }
+
+    public function has($key)
+    {
+        return $this->mechnism->has($key);
+    }
+
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    public function __set($key, $value)
+    {
+        $this->set($key, $value);
+    }
+
+    public function __unset($name)
+    {
+        $this->delete($name);
+    }
+
+    public function __isset($key)
+    {
+        return $this->has($key);
+    }
 }
