@@ -33,43 +33,37 @@
 
 namespace Sse\Mechnisms;
 
-use Memcached;
 
-class MemcacheMechnism extends AbstractMechnism
+class XCacheMechnism extends AbstractMechnism
 {
-
-    private $connection;
 
     protected $lifetime = 0;
 
     public function __construct(array $parameter)
     {
-        parent::__construct($parameter);
-        $this->connection = isset($parameter['memcache_id']) ? new Memcached($parameter['memcache_id']) : new Memcached;
-        if (isset($parameter['server'])) {
-            $this->connection->addServers($parameter['server']);
+        if (!extension_loaded('xcache')) {
+            throw new \RuntimeException('XCache is not enabled, Unable to use XCacheMechnism');
         }
-    }
-
-    public function get($key)
-    {
-        return $this->connection->get($key);
-    }
-
-    public function set($key, $value)
-    {
-        $this->connection->set($key, $value, $this->lifetime ? $this->lifetime + time() : 0);
-        return $this->connection->getResultCode() === Memcached::RES_STORED;
-    }
-
-    public function delete($key)
-    {
-        $this->connection->delete($key);
-        return $this->connection->getResultCode() === Memcached::RES_DELETED;
+        parent::__construct($parameter);
     }
 
     public function has($key)
     {
-        return parent::has($key) && $this->connection->getResultCode() === Memcached::RES_SUCCESS;
+        return xcache_isset($key);
+    }
+
+    public function set($key, $value)
+    {
+        return xcache_set($key, $value, $this->lifetime);
+    }
+
+    public function get($key)
+    {
+        return xcache_get($key);
+    }
+
+    public function delete($key)
+    {
+        return xcache_unset($key);
     }
 }
