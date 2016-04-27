@@ -101,4 +101,9 @@ class FileMechnism extends AbstractMechnism
     {
         return $this->path.'/sess_'.sha1($key);
     }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
 }

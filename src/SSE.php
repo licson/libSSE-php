@@ -113,14 +113,14 @@ class SSE {
         ob_implicit_flush(1);
 
         $start = time();//record start time
-        echo 'retry: '.($this->client_reconnect*1000)."\n";	//set the retry interval for the client
+        echo 'retry: ' . ($this->client_reconnect * 1000) . "\n";	//set the retry interval for the client
 
         //keep the script running
         while(true){
             if(Utils::timeMod($start, $this->keep_alive_time) == 0){
                 //No updates needed, send a comment to keep the connection alive.
                 //From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
-                echo ': '.sha1(mt_rand())."\n\n";
+                echo ': ' . sha1( mt_rand() ) . "\n\n";
             }
 
             //start to check for updates
@@ -132,9 +132,6 @@ class SSE {
                     //make sure the data has been sent to the client
                     @ob_flush();
                     @flush();
-                }
-                else {
-                    continue;
                 }
             }
 

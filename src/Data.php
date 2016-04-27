@@ -82,8 +82,13 @@ class Data implements DataInterface
     public static function fireOnInitial()
     {
         $classes = array(
-            'apc' =>'Sse\\Mechnisms\\ApcMechnism',
-            'file' => 'Sse\\Mechnisms\\FileMechnism'
+            'apc'       =>'Sse\\Mechnisms\\ApcMechnism',
+            'file'      => 'Sse\\Mechnisms\\FileMechnism',
+            'memcache'  => 'Sse\\Mechnisms\\MemcacheMechnism',
+            'mongo'     => 'Sse\\Mechnisms\\MongoMechnism',
+            'pdo'       => 'Sse\\Mechnisms\\PdoMechnism',
+            'redis'     => 'Sse\\Mechnisms\\RedisMechnism',
+            'xcache'    => 'Sse\\Mechnisms\\XCacheMechnism',
         );
 
         foreach ($classes as $class => $mechnism) {
