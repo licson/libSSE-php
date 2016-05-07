@@ -54,7 +54,7 @@ abstract class Utils
      * @param string $data Event Data
      * @param string $name Event Name
      */
-    public static function sseBlock($id, $data, $name = null)
+    public static function sseBlock($id, $name = null, $data)
     {
         static::sseSend("id: $id\n");
         if (strlen($name) && $name !== null) {
