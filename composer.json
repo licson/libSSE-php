@@ -45,6 +45,6 @@
   },
 
   "suggest": {
-    "predis/predis": "For using RedisMechnism"
+    "predis/predis": "For using RedisMechnism and Redis PubSub"
   }
 }
