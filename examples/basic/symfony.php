@@ -37,6 +37,8 @@
  * Able to be used for Symfony or Laravel
  */
 
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 use \Symfony\Component\HttpFoundation\StreamedResponse;
 use Sse\Event;
 use Sse\SSE;
@@ -51,13 +53,9 @@ class TimeEvent implements Event {
     }
 }
 
-$response = new StreamedResponse;
-
-$response->setCallback(function () {
-    $sse = new SSE();
-    $sse->exec_limit = 10;
-    $sse->addEventListener('time', new TimeEvent());
-    $sse->start();
-});
+$sse = new SSE;
+$sse->exec_limit=10;
+$sse->addEventListener('time', new TimeEvent());
+$response = $sse->createResponse();
 
 $response->send();

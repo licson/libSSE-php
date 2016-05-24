@@ -36,7 +36,7 @@ namespace Sse\Events;
 use Sse\Event;
 use Sse\Utils;
 
-class TimedEvent implements Event
+abstract class TimedEvent implements Event
 {
     /**
      * @var int
@@ -52,10 +52,5 @@ class TimedEvent implements Event
         if ($this->start === 0)
             $this->start = time();
         return Utils::timeMod($this->start, $this->period) === 0;
-    }
-
-    public function update()
-    {
-
     }
 }

@@ -59,7 +59,7 @@ Date: <span id="time"></span>
 <br>
 <h4>Source code (Server-side)</h4>
 <ol class="php"><li class="li1"><div class="de1"><span class="kw2">&lt;?php</span></div></li>
-<li class="li1"><div class="de1"><span class="kw1">require_once</span><span class="br0">(</span><span class="st_h">'../../src/libsse.php'</span><span class="br0">)</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1"><span class="kw1">require_once</span><span class="br0">(</span><span class="kw2">__DIR__</span><span class="br0">.</span><span class="st_h"> '/../../vendor/autoload.php'</span><span class="br0">)</span><span class="sy0">;</span></div></li>
 <li class="li1"><div class="de1">&nbsp;</div></li>
 <li class="li1"><div class="de1"><span class="kw2">class</span> TimeEvent <span class="kw2">extends</span> SSEEvent <span class="br0">{</span></div></li>
 <li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">public</span> <span class="kw2">function</span> update<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
@@ -67,6 +67,13 @@ Date: <span id="time"></span>
 <li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">}</span></div></li>
 <li class="li1"><div class="de1"><span class="br0">}</span></div></li>
 <li class="li1"><div class="de1">&nbsp;</div></li>
+
+	<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="kw2">public</span> <span class="kw2">function</span> check<span class="br0">(</span><span class="br0">)</span><span class="br0">{</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="kw1">return</span><span class="kw2"> true</span><span class="sy0">;</span></div></li>
+<li class="li1"><div class="de1">&nbsp; &nbsp; &nbsp; &nbsp; <span class="br0">}</span></div></li>
+<li class="li1"><div class="de1"><span class="br0">}</span></div></li>
+<li class="li1"><div class="de1">&nbsp;</div></li>
+
 <li class="li1"><div class="de1"><span class="re0">$sse</span> <span class="sy0">=</span> <span class="kw2">new</span> SSE<span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>
 <li class="li1"><div class="de1"><span class="re0">$sse</span><span class="sy0">-&gt;</span><span class="me1">addEventListener</span><span class="br0">(</span><span class="st_h">'time'</span><span class="sy0">,</span><span class="kw2">new</span> TimeEvent<span class="br0">(</span><span class="br0">)</span><span class="br0">)</span><span class="sy0">;</span></div></li>
 <li class="li1"><div class="de1"><span class="re0">$sse</span><span class="sy0">-&gt;</span><span class="me1">start</span><span class="br0">(</span><span class="br0">)</span><span class="sy0">;</span></div></li>

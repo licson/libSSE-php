@@ -87,4 +87,6 @@ Compatibility
 ==============
 
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
-However, polyfill for server-sent events is avaliable. Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted. There's some settings in the library that can fix it.
+However, polyfill for server-sent events is avaliable.
+Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted.
+There's some settings in the library that can fix it.
