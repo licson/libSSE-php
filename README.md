@@ -66,7 +66,8 @@ Client-side(javascript):
 Settings
 ===========
 
-After you created the libSSE instance, there's some settings for you to control the behaviour. Below is the settings provided by the library.
+After you created the libSSE instance, there's some settings for you to control the behaviour.
+Below is the settings provided by the library.
 
 	<?php
 	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
@@ -90,3 +91,43 @@ Because server-sent events is a new standard and still in flux, only certain bro
 However, polyfill for server-sent events is avaliable.
 Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted.
 There's some settings in the library that can fix it.
+
+Integration with Frameworks
+============================
+
+Symfony
+-----------
+
+    <?php
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+    
+    class DefaultController extends Controller
+    {
+        /**
+         * @Route("/sse", name="sse")
+         */
+        public function sseAction()
+        {
+            $sse = new Sse\SSE();
+            // Add your event listener
+            return $sse->createResponse();
+        }
+    }
+    
+Laravel
+--------
+
+    <?php
+    use App\Http\Controller;
+    use Sse\SSE;
+    
+    class FooController extends Controller
+    {
+        public function sse()
+        {
+             $sse = new SSE\SSE();
+             // Add your event listener
+             return $sse->createResponse();
+        }
+    }

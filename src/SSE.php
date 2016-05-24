@@ -53,7 +53,7 @@ class SSE {
     private $config = array(
         'sleep_time' => 0.5,                // seconds to sleep after the data has been sent
         'exec_limit' => 600,                // the time limit of the script in seconds
-        'client_reconnect' => 1,            // the time client to reconnect after connection has lost in seconds
+        'client_reconnect' => true,            // the time client to reconnect after connection has lost in seconds
         'allow_cors' => false,              // Allow Cross-Origin Access?
         'keep_alive_time' => 300,           // The interval of sending a signal to keep the connection alive
         'is_reconnect' => false,            // A read-only flag indicates whether the user reconnects
@@ -74,8 +74,8 @@ class SSE {
             $request = Request::createFromGlobals();
         }
 
-        $this->id = intval($request->server->get('LAST_EVENT_ID', 0));
-        $this->is_reconnect = $request->server->has('LAST_EVENT_ID');
+        $this->id = intval($request->headers->get('Last-Event-ID', 0));
+        $this->config['is_reconnect'] = $request->headers->has('Last-Event-ID');
 
     }
     /**
@@ -150,6 +150,7 @@ class SSE {
             'Content-Type' => 'text/event-stream',
             'Cache-Control' => 'no-cache'
         ));
+
         if($this->allow_cors){
             $response->headers->set('Access-Control-Allow-Origin', '*');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
@@ -191,7 +192,7 @@ class SSE {
 
     public function set($key, $value)
     {
-        if (in_array($key, array('is_reconnected'))) {
+        if (in_array($key, array('is_reconnect'))) {
             throw new \InvalidArgumentException('is_reconnected is an read-only flag');
         }
         $this->config[$key] = $value;
