@@ -81,5 +81,11 @@ class SSETest extends \PHPUnit_Framework_TestCase
         $sse = new SSE();
         $sse->set('is_reconnect', true);
     }
+
+    public function testStart()
+    {
+        $sse = new SSE();
+        $sse->start();
+    }
 }
 
