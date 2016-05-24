@@ -1,5 +1,4 @@
 <?php
-
 /**
  * libSSE-php
  *
@@ -32,23 +31,33 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
-
 /**
- * Event Listener of the messages.
+ * It has same result in data, but using the Symfony HttpFoundation Component
+ *
+ * Able to be used for Symfony or Laravel
  */
-interface Event
-{
-    /**
-     * Check for continue to send event.
-     *
-     * @return bool
-     */
-    public function check();
 
-    /**
-     * Get Updated Data.
-     * @return string
-     */
-    public function update();
+use \Symfony\Component\HttpFoundation\StreamedResponse;
+use Sse\Event;
+use Sse\SSE;
+
+class TimeEvent implements Event {
+    public function check(){
+        return true;
+    }
+
+    public function update(){
+        return date('l, F jS, Y, h:i:s A');
+    }
 }
+
+$response = new StreamedResponse;
+
+$response->setCallback(function () {
+    $sse = new SSE();
+    $sse->exec_limit = 10;
+    $sse->addEventListener('time', new TimeEvent());
+    $sse->start();
+});
+
+$response->send();

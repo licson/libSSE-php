@@ -33,14 +33,20 @@
 
 namespace Sse;
 
+use \Symfony\Component\HttpFoundation\Request;
+
 class SSE {
 
     /**
-     * @var array<Event>
+     * @var array<\SSE\Event>
      */
     private $handlers = array();
 
-    private $id = 0;//the event id
+    /**
+     * Event ID.
+     * @var int
+     */
+    private $id = 0;
 
     private $config = array(
         'sleep_time' => 0.5,                // seconds to sleep after the data has been sent
@@ -52,15 +58,23 @@ class SSE {
         'use_chunked_encoding' => false,    // Allow chunked encoding
     );
 
-    public function __construct()
+    /**
+     * SSE constructor.
+     *
+     * @param Request|null $request
+     */
+    public function __construct(Request $request = null)
     {
-        // TODO: Use Symfony Request instead of $_SERVER.
         //if the HTTP header 'Last-Event-ID' is set
         //then it's a reconnect from the client
-        if(isset($_SERVER['HTTP_LAST_EVENT_ID'])){
-            $this->id = intval($_SERVER['HTTP_LAST_EVENT_ID']);
-            $this->is_reconnect = true;
+
+        if ($request === null) {
+            $request = Request::createFromGlobals();
         }
+
+        $this->id = intval($request->server->get('LAST_EVENT_ID', 0));
+        $this->is_reconnect = $request->server->has('LAST_EVENT_ID');
+
     }
     /**
      * Attach a event handler
@@ -101,14 +115,14 @@ class SSE {
 
         //prevent buffering
         if(function_exists('apache_setenv')){
-            @apache_setenv('no-gzip',1);
+            @apache_setenv('no-gzip', 1);
         }
 
-        @ini_set('zlib.output_compression',0);
-        @ini_set('implicit_flush',1);
+        @ini_set('zlib.output_compression', 0);
+        @ini_set('implicit_flush', 1);
 
         while (ob_get_level() != 0) {
-            ob_end_flush();
+            ob_flush();
         }
         ob_implicit_flush(1);
 
