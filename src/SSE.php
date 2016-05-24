@@ -114,32 +114,38 @@ class SSE {
     {
         $this->init();
         $callback = function () {
-            $start = time(); //record start time
+            $start = time(); // Record start time
             echo 'retry: ' . ($this->client_reconnect * 1000) . "\n";	//set the retry interval for the client
             while (true) {
                 if (Utils::timeMod($start, $this->keep_alive_time) == 0) {
-                    //No updates needed, send a comment to keep the connection alive.
-                    //From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
+                    // No updates needed, send a comment to keep the connection alive.
+                    // From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
                     echo ': ' . sha1(mt_rand()) . "\n\n";
                 }
-
-                //start to check for updates
+                
+                // Leave the loop if there are no morer handlers
+                if (count($this->handlers) == 0) {
+                    break;
+                }
+                
+                // Start to check for updates
                 foreach ($this->handlers as $event => $handler) {
-                    if ($handler->check()) {//check if the data is avaliable
-                        $data = $handler->update();//get the data
+                    if ($handler->check()) { // Check if the data is avaliable
+                        $data = $handler->update(); // Get the data
                         $this->id++;
                         Utils::sseBlock($this->id, $data, $event);
-                        //make sure the data has been sent to the client
+                        
+                        // Make sure the data has been sent to the client
                         @ob_flush();
                         @flush();
                     }
                 }
 
-                //break if the time exceed the limit
+                // Break if the time exceed the limit
                 if ($this->exec_limit !== 0 && Utils::timeDiff($start) > $this->exec_limit) {
                     break;
                 }
-                //sleep
+                // Sleep
                 usleep($this->sleep_time * 1000000);
             }
         };
@@ -164,9 +170,9 @@ class SSE {
 
     protected function init()
     {
-        @set_time_limit(0); //disable time limit
+        @set_time_limit(0); // Disable time limit
 
-        //prevent buffering
+        // Prevent buffering
         if(function_exists('apache_setenv')){
             @apache_setenv('no-gzip', 1);
         }

@@ -8,6 +8,7 @@ CHANGELOG
  * SSE use magic method instead of direct access
  * Add Redis and Memcahce Mechnism
  * Add SessionLike Mechnism
+ * Fixed event loop handling where removing handlers at runtime can result in a broken state.
  
 2.0.1
 -------

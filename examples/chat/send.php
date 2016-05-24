@@ -11,7 +11,6 @@ $sse = new SSE();
 
 class LatestUser implements Event {
     private $cache = 0;
-
     private $data;
     private $storage;
 
@@ -57,6 +56,6 @@ class LatestMessage implements Event {
 };
 
 $sse->exec_limit = 30;
-$sse->addEventListener('user',new LatestUser($data));
-$sse->addEventListener('',new LatestMessage($data));
+$sse->addEventListener('user', new LatestUser($data));
+$sse->addEventListener('', new LatestMessage($data));
 $sse->start();
