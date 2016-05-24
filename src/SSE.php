@@ -98,6 +98,16 @@ class SSE {
         unset($this->handlers[$event]);
     }
 
+    public function getEventListeners()
+    {
+        return $this->handlers;
+    }
+
+    public function hasEventListener()
+    {
+        return count($this->handlers) !== 0;
+    }
+
     /**
      * Start the event loop
      */
@@ -118,23 +128,23 @@ class SSE {
             $start = time(); // Record start time
             echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	//set the retry interval for the client
             while (true) {
+                // Leave the loop if there are no morer handlers
+                if (!$that->hasEventListener()) {
+                    break;
+                }
+
                 if (Utils::timeMod($start, $that->keep_alive_time) == 0) {
                     // No updates needed, send a comment to keep the connection alive.
                     // From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
                     echo ': ' . sha1(mt_rand()) . "\n\n";
                 }
                 
-                // Leave the loop if there are no morer handlers
-                if (count($that->handlers) == 0) {
-                    break;
-                }
-                
                 // Start to check for updates
-                foreach ($that->handlers as $event => $handler) {
+                foreach ($that->getEventListeners() as $event => $handler) {
                     if ($handler->check()) { // Check if the data is avaliable
                         $data = $handler->update(); // Get the data
-                        $that->id++;
-                        Utils::sseBlock($that->id, $data, $event);
+                        $id = $that->getNewId();
+                        Utils::sseBlock($id, $data, $event);
                         
                         // Make sure the data has been sent to the client
                         @ob_flush();
@@ -151,7 +161,6 @@ class SSE {
             }
         };
 
-        //$callback->bindTo($this);
 
         $response = new StreamedResponse($callback, Response::HTTP_OK, array(
             'Content-Type' => 'text/event-stream',
@@ -167,6 +176,12 @@ class SSE {
             $response->headers->set('Transfer-encoding', 'chunked');
 
         return $response;
+    }
+
+    public function getNewId()
+    {
+        $this->id += 1;
+        return $this->id;
     }
 
     protected function init()
