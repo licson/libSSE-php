@@ -2,7 +2,6 @@
 'use strict';
 
 const gulp = require('gulp');
-const watch = require('gulp-watch');
 const phpunit = require('gulp-phpunit');
 
 gulp.task('test', function () {
@@ -14,11 +13,12 @@ gulp.task('test', function () {
 });
 
 gulp.task('watch', function () {
-    watch([
+    gulp.watch([
         'src/**/*.php',
         'tests/**/*.php',
         'phpunit.xml'
-    ], function () {
-        gulp.run('test');
-    });
+    ], ['test']);
 });
+
+gulp.task('default', ['test', 'watch']);
+

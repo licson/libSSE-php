@@ -55,7 +55,7 @@ class Data implements DataInterface
     /**
      * Data constructor.
      *
-     * @param string $method the mechnism to use
+     * @param string $mechnism the mechnism to use
      * @param array $credinals
      */
     public function __construct($mechnism, array $credinals = array())

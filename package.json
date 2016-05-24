@@ -2,7 +2,6 @@
   "private": true,
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-phpunit": "^0.14.0",
-    "gulp-watch": "^4.3.5"
+    "gulp-phpunit": "^0.14.0"
   }
 }

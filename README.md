@@ -2,6 +2,7 @@ libSSE-php
 ==========
 
 [![License](https://img.shields.io/badge/License-MIT-428F7E.svg)](LICENSE.md)
+[![Build Status](https://travis-ci.org/tonyhhyip/libSSE-php.svg?branch=master)](https://travis-ci.org/tonyhhyip/libSSE-php)
 
 An easy-to-use, object-orienlated library for Server-Sent Events
 
@@ -66,7 +67,8 @@ Client-side(javascript):
 Settings
 ===========
 
-After you created the libSSE instance, there's some settings for you to control the behaviour. Below is the settings provided by the library.
+After you created the libSSE instance, there's some settings for you to control the behaviour.
+Below is the settings provided by the library.
 
 	<?php
 	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
@@ -87,4 +89,46 @@ Compatibility
 ==============
 
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
-However, polyfill for server-sent events is avaliable. Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted. There's some settings in the library that can fix it.
+However, polyfill for server-sent events is avaliable.
+Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted.
+There's some settings in the library that can fix it.
+
+Integration with Frameworks
+============================
+
+Symfony
+-----------
+
+    <?php
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+    use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+    
+    class DefaultController extends Controller
+    {
+        /**
+         * @Route("/sse", name="sse")
+         */
+        public function sseAction()
+        {
+            $sse = new Sse\SSE();
+            // Add your event listener
+            return $sse->createResponse();
+        }
+    }
+    
+Laravel
+--------
+
+    <?php
+    use App\Http\Controller;
+    use Sse\SSE;
+    
+    class FooController extends Controller
+    {
+        public function sse()
+        {
+             $sse = new SSE\SSE();
+             // Add your event listener
+             return $sse->createResponse();
+        }
+    }

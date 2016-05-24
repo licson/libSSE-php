@@ -31,13 +31,31 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse\Tests\Mechnisms;
+/**
+ * It has same result in data, but using the Symfony HttpFoundation Component
+ *
+ * Able to be used for Symfony or Laravel
+ */
 
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-class ApcMechnismTest extends \PHPUnit_Framework_TestCase
-{
-    public function testConstruct()
-    {
-        
+use \Symfony\Component\HttpFoundation\StreamedResponse;
+use Sse\Event;
+use Sse\SSE;
+
+class TimeEvent implements Event {
+    public function check(){
+        return true;
+    }
+
+    public function update(){
+        return date('l, F jS, Y, h:i:s A');
     }
 }
+
+$sse = new SSE;
+$sse->exec_limit=10;
+$sse->addEventListener('time', new TimeEvent());
+$response = $sse->createResponse();
+
+$response->send();

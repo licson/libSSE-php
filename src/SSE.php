@@ -33,34 +33,50 @@
 
 namespace Sse;
 
+use \Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 class SSE {
 
     /**
-     * @var array<Event>
+     * @var array<\SSE\Event>
      */
     private $handlers = array();
 
-    private $id = 0;//the event id
+    /**
+     * Event ID.
+     * @var int
+     */
+    private $id = 0;
 
     private $config = array(
         'sleep_time' => 0.5,                // seconds to sleep after the data has been sent
         'exec_limit' => 600,                // the time limit of the script in seconds
-        'client_reconnect' => 1,            // the time client to reconnect after connection has lost in seconds
+        'client_reconnect' => true,            // the time client to reconnect after connection has lost in seconds
         'allow_cors' => false,              // Allow Cross-Origin Access?
         'keep_alive_time' => 300,           // The interval of sending a signal to keep the connection alive
         'is_reconnect' => false,            // A read-only flag indicates whether the user reconnects
         'use_chunked_encoding' => false,    // Allow chunked encoding
     );
 
-    public function __construct()
+    /**
+     * SSE constructor.
+     *
+     * @param Request|null $request
+     */
+    public function __construct(Request $request = null)
     {
-        // TODO: Use Symfony Request instead of $_SERVER.
         //if the HTTP header 'Last-Event-ID' is set
         //then it's a reconnect from the client
-        if(isset($_SERVER['HTTP_LAST_EVENT_ID'])){
-            $this->id = intval($_SERVER['HTTP_LAST_EVENT_ID']);
-            $this->is_reconnect = true;
+
+        if ($request === null) {
+            $request = Request::createFromGlobals();
         }
+
+        $this->id = intval($request->headers->get('Last-Event-ID', 0));
+        $this->config['is_reconnect'] = $request->headers->has('Last-Event-ID');
+
     }
     /**
      * Attach a event handler
@@ -86,60 +102,88 @@ class SSE {
      * Start the event loop
      */
     public function start(){
-        @set_time_limit(0); //disable time limit
+        $response = $this->createResponse();
+        $response->send();
+    }
 
-        //send the proper header
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
+    /**
+     * Create a Response to send event
+     * @return StreamedResponse
+     */
+    public function createResponse()
+    {
+        $this->init();
+        $callback = function () {
+            $start = time(); // Record start time
+            echo 'retry: ' . ($this->client_reconnect * 1000) . "\n";	//set the retry interval for the client
+            while (true) {
+                if (Utils::timeMod($start, $this->keep_alive_time) == 0) {
+                    // No updates needed, send a comment to keep the connection alive.
+                    // From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
+                    echo ': ' . sha1(mt_rand()) . "\n\n";
+                }
+                
+                // Leave the loop if there are no morer handlers
+                if (count($this->handlers) == 0) {
+                    break;
+                }
+                
+                // Start to check for updates
+                foreach ($this->handlers as $event => $handler) {
+                    if ($handler->check()) { // Check if the data is avaliable
+                        $data = $handler->update(); // Get the data
+                        $this->id++;
+                        Utils::sseBlock($this->id, $data, $event);
+                        
+                        // Make sure the data has been sent to the client
+                        @ob_flush();
+                        @flush();
+                    }
+                }
 
-        if($this->allow_cors){
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Credentials: true');
+                // Break if the time exceed the limit
+                if ($this->exec_limit !== 0 && Utils::timeDiff($start) > $this->exec_limit) {
+                    break;
+                }
+                // Sleep
+                usleep($this->sleep_time * 1000000);
+            }
         };
 
-        if($this->use_chunked_encoding) header('Transfer-encoding: chunked');
+        $callback->bindTo($this);
 
-        //prevent buffering
+        $response = new StreamedResponse($callback, Response::HTTP_OK, array(
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache'
+        ));
+
+        if($this->allow_cors){
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Credentials', 'true');
+        };
+
+        if($this->use_chunked_encoding)
+            $response->headers->set('Transfer-encoding', 'chunked');
+
+        return $response;
+    }
+
+    protected function init()
+    {
+        @set_time_limit(0); // Disable time limit
+
+        // Prevent buffering
         if(function_exists('apache_setenv')){
-            @apache_setenv('no-gzip',1);
+            @apache_setenv('no-gzip', 1);
         }
 
-        @ini_set('zlib.output_compression',0);
-        @ini_set('implicit_flush',1);
+        @ini_set('zlib.output_compression', 0);
+        @ini_set('implicit_flush', 1);
 
         while (ob_get_level() != 0) {
             ob_end_flush();
         }
         ob_implicit_flush(1);
-
-        $start = time();//record start time
-        echo 'retry: ' . ($this->client_reconnect * 1000) . "\n";	//set the retry interval for the client
-
-        //keep the script running
-        while(true){
-            if(Utils::timeMod($start, $this->keep_alive_time) == 0){
-                //No updates needed, send a comment to keep the connection alive.
-                //From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
-                echo ': ' . sha1( mt_rand() ) . "\n\n";
-            }
-
-            //start to check for updates
-            foreach($this->handlers as $event => $handler){
-                if($handler->check()){//check if the data is avaliable
-                    $data = $handler->update();//get the data
-                    $this->id++;
-                    Utils::sseBlock($this->id, $data, $event);
-                    //make sure the data has been sent to the client
-                    @ob_flush();
-                    @flush();
-                }
-            }
-
-            //break if the time excceed the limit
-            if($this->exec_limit != 0 && Utils::timeDiff($start) > $this->exec_limit) break;
-            //sleep
-            usleep($this->sleep_time * 1000000);
-        }
     }
 
     public function get($key)
@@ -154,7 +198,7 @@ class SSE {
 
     public function set($key, $value)
     {
-        if (in_array($key, array('is_reconnected'))) {
+        if (in_array($key, array('is_reconnect'))) {
             throw new \InvalidArgumentException('is_reconnected is an read-only flag');
         }
         $this->config[$key] = $value;

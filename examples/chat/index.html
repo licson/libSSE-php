@@ -2,8 +2,8 @@
 <head>
 	<title>Chat system with libSSE</title>
 	<meta charset="utf-8" />
-	<link href="https://raw.github.com/twitter/bootstrap/master/docs/assets/css/bootstrap.css" type="text/css" rel="stylesheet" />
-	<link href="https://raw.github.com/twitter/bootstrap/master/docs/assets/css/bootstrap-responsive.css" type="text/css" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap-theme.min.css" type="text/css" rel="stylesheet" />
 	<style>
 	blockquote {
 		margin-bottom: 2px;
@@ -38,12 +38,13 @@
 				success:$.noop
 			});
 		});
-		data.addEventListener('user',function(e){
+		data.addEventListener('user', function(e){
 			$('#latest').html('Current User: '+e.data);
 		},false);
-		data.addEventListener('message',function(e){
+		data.addEventListener('message', function(e){
 			var data = $.parseJSON(e.data);
-			$('#lines').prepend($('<blockquote>',{text:data.msg}).append($('<small>',{text:'By '+data.user})));
+			$('#lines').prepend($('<blockquote>', {text:data.msg})
+					.append($('<small>', {text: 'By ' + data.user})));
 		},false);
 	});
 	</script>
