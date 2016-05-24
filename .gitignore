@@ -135,3 +135,5 @@ phpunit.xml
 ## Node.js Dev
 ############
 /node_modules
+
+examples/chat/data/

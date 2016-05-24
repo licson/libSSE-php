@@ -6,20 +6,25 @@ use Sse\Data;
 use Sse\SSE;
 use Sse\Event;
 
-$GLOBALS['data'] = new Data('file', array('path'=>'./data'));
+$data = new Data('file', array('path'=>'./data'));
 $sse = new SSE();
 
 class LatestUser implements Event {
     private $cache = 0;
 
     private $data;
+    private $storage;
+
+    public function __construct($data) {
+        $this->storage = $data;
+    }
 
     public function update(){
         return $this->data->msg;
     }
 
     public function check(){
-        $this->data = json_decode($GLOBALS['data']->get('user'));
+        $this->data = json_decode($this->storage->get('user'));
         if($this->data->time !== $this->cache){
             $this->cache = $this->data->time;
             return true;
@@ -31,13 +36,18 @@ class LatestUser implements Event {
 class LatestMessage implements Event {
     private $cache = 0;
     private $data;
+    private $storage;
+
+    public function __construct($data) {
+        $this->storage = $data;
+    }
 
     public function update(){
         return json_encode($this->data);
     }
 
     public function check(){
-        $this->data = json_decode($GLOBALS['data']->get('message'));
+        $this->data = json_decode($this->storage->get('message'));
         if($this->data->time !== $this->cache){
             $this->cache = $this->data->time;
             return true;
@@ -47,6 +57,6 @@ class LatestMessage implements Event {
 };
 
 $sse->exec_limit = 30;
-$sse->addEventListener('user',new LatestUser());
-$sse->addEventListener('',new LatestMessage());
+$sse->addEventListener('user',new LatestUser($data));
+$sse->addEventListener('',new LatestMessage($data));
 $sse->start();
