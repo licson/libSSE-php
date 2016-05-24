@@ -35,7 +35,6 @@ namespace Sse\Tests;
 
 use Sse\SSE;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SSETest extends \PHPUnit_Framework_TestCase
 {
@@ -62,7 +61,7 @@ class SSETest extends \PHPUnit_Framework_TestCase
         $sse = new SSE();
         $response = $sse->createResponse();
 
-        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $this->assertInstanceOf('\Symfony\Component\HttpFoundation\StreamedResponse', $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('text/event-stream', $response->headers->get('Content-Type'));
 
