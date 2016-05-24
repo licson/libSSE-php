@@ -31,16 +31,56 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\PubSub;
 
 
-interface DataInterface
+use Predis\Client;
+
+class RedisConsumer implements ConsumerInterface
 {
-    public function get($key);
 
-    public function set($key, $value);
+    /**
+     * @var Client
+     */
+    private $client;
 
-    public function delete($key);
+    /**
+     * @var array
+     */
+    private $pubsub = [];
 
-    public function has($key);
+    /**
+     * @var array
+     */
+    private $keepOn = [];
+
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
+
+    public function subscribe($channel, \Closure $callback)
+    {
+        $pubsub = $this->client->pubSubLoop();
+
+        $pubsub->subscribe($channel);
+
+        $this->pubsub[$channel] = $pubsub;
+        $this->keepOn[] = $channel;
+
+        foreach ($pubsub as $message) {
+            if ($message->kind == 'message' && $message->channel == 'control_channel') {
+                if (in_array($channel, $this->keepOn))
+                    $callback($message->payload);
+                else
+                    $pubsub->unsubscribe();
+            }
+        }
+    }
+
+    public function unsubscribe($channel)
+    {
+        if (($key = array_search($channel, $this->keepOn) !== false))
+            unset($this->keepOn[$key]);
+    }
 }

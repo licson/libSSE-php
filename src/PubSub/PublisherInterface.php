@@ -31,16 +31,22 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\PubSub;
 
-
-interface DataInterface
+/**
+ * Interface PublisherInterface
+ *
+ * To publish message to consumers.
+ *
+ * @package Sse\PubSub
+ */
+interface PublisherInterface
 {
-    public function get($key);
-
-    public function set($key, $value);
-
-    public function delete($key);
-
-    public function has($key);
+    /**
+     * Publish content to the consumers.
+     *
+     * @param string $channel
+     * @param string $content
+     */
+    public function publish($channel, $content);
 }

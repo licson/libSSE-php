@@ -31,16 +31,45 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\Mechnisms;
 
+use Memcached;
 
-interface DataInterface
+class MemcacheMechnism extends AbstractMechnism
 {
-    public function get($key);
 
-    public function set($key, $value);
+    private $connection;
 
-    public function delete($key);
+    protected $lifetime = 0;
 
-    public function has($key);
+    public function __construct(array $parameter)
+    {
+        parent::__construct($parameter);
+        $this->connection = isset($parameter['memcache_id']) ? new Memcached($parameter['memcache_id']) : new Memcached;
+        if (isset($parameter['server'])) {
+            $this->connection->addServers($parameter['server']);
+        }
+    }
+
+    public function get($key)
+    {
+        return $this->connection->get($key);
+    }
+
+    public function set($key, $value)
+    {
+        $this->connection->set($key, $value, $this->lifetime ? $this->lifetime + time() : 0);
+        return $this->connection->getResultCode() === Memcached::RES_STORED;
+    }
+
+    public function delete($key)
+    {
+        $this->connection->delete($key);
+        return $this->connection->getResultCode() === Memcached::RES_DELETED;
+    }
+
+    public function has($key)
+    {
+        return parent::has($key) && $this->connection->getResultCode() === Memcached::RES_SUCCESS;
+    }
 }

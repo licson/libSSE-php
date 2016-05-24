@@ -1,16 +1,25 @@
 libSSE-php
 ==========
 
+[![License](https://img.shields.io/badge/License-MIT-428F7E.svg)](LICENSE.md)
+
 An easy-to-use, object-orienlated library for Server-Sent Events
 
 Updates
 =========
 
-1. Add new functionality: cross-script communication is now possible with SSEData.
-2. Add example that demostratrs the new functionality: a chatroom build with libSSE in less than 100 lines of PHP code!
+1. Namespace is added for libSSE.
+2. `SSEEvent` become `Sse\Event` which is an interface
 3. Cleaner code
-4. Add documentation. [Check it here](https://github.com/licson0729/libSSE-php/wiki/libSSE-docs)
-5. Improved code on output buffering.
+4. Available on **packagist** as `tonyhhyip/sse`
+5. Static method `time_mod` and `time_diff` of `SSEUtils` has been changed into `timeMod` and `timeDiff` of `Sse\Utils`
+6. `has` method is added to DataInterface. Properties access method is implemented by magic methods.
+
+Documentation
+--------------
+
+You may find it here.
+[https://github.com/licson0729/libSSE-php/wiki/libSSE-docs](https://github.com/licson0729/libSSE-php/wiki/libSSE-docs)
 
 Development
 ============
@@ -23,14 +32,18 @@ Quick use
 Server-side(PHP):
 
 	<?php
-	require_once('./src/libsse.php');//include the library
+	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
+	
+	use Sse\Event;
+	use Sse\SSE;
 	
 	//create the event handler
-	class YourEventHandler extends SSEEvent {
+	class YourEventHandler implements SSEEvent {
 		public function update(){
 			//Here's the place to send data
 			return 'Hello, world!';
 		}
+		
 		public function check(){
 			//Here's the place to check when the data needs update
 			return true;
@@ -56,7 +69,10 @@ Settings
 After you created the libSSE instance, there's some settings for you to control the behaviour. Below is the settings provided by the library.
 
 	<?php
-	require_once('./src/libsse.php');
+	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
+	
+	use Sse\SSE;
+	
 	$sse = new SSE();
 	
 	$sse->exec_limit = 10; //the execution time of the loop in seconds. Default: 600. Set to 0 to allow the script to run as long as possible.
@@ -71,4 +87,6 @@ Compatibility
 ==============
 
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
-However, polyfill for server-sent events is avaliable. Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted. There's some settings in the library that can fix it.
+However, polyfill for server-sent events is avaliable.
+Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted.
+There's some settings in the library that can fix it.

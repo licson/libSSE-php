@@ -31,16 +31,13 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\Tests\Mechnisms;
 
 
-interface DataInterface
+class ApcMechnismTest extends \PHPUnit_Framework_TestCase
 {
-    public function get($key);
-
-    public function set($key, $value);
-
-    public function delete($key);
-
-    public function has($key);
+    public function testConstruct()
+    {
+        
+    }
 }

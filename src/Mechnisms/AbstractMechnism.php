@@ -31,16 +31,50 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\Mechnisms;
 
 
-interface DataInterface
+use Sse\DataInterface;
+
+abstract class AbstractMechnism implements DataInterface
 {
-    public function get($key);
 
-    public function set($key, $value);
+    /**
+     * Seconds of inactive timeout
+     * @var int
+     */
+    protected $lifetime = 6000;
 
-    public function delete($key);
+    public function __construct(array $parameter)
+    {
+        if (array_key_exists('gc_lifetime', $parameter)) {
+            $this->lifetime = $parameter['gc_lifetime'];
+        }
+    }
 
-    public function has($key);
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    public function __set($key, $value)
+    {
+        $this->set($key, $value);
+    }
+
+    public function __unset($name)
+    {
+        $this->delete($name);
+    }
+
+    public function has($key)
+    {
+        $value = $this->get($key);
+        return !!$value;
+    }
+
+    public function __isset($key)
+    {
+        return $this->has($key);
+    }
 }

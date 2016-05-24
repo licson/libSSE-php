@@ -31,16 +31,25 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\PubSub;
 
 
-interface DataInterface
+use Predis\Client;
+
+class RedisPublisher implements PublisherInterface
 {
-    public function get($key);
+    /**
+     * @var Client
+     */
+    private $client;
 
-    public function set($key, $value);
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
 
-    public function delete($key);
-
-    public function has($key);
+    public function publish($channel, $message)
+    {
+        $this->client->publish($channel, $message);
+    }
 }

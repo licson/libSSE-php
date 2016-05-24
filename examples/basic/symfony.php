@@ -31,16 +31,31 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+/**
+ * It has same result in data, but using the Symfony HttpFoundation Component
+ *
+ * Able to be used for Symfony or Laravel
+ */
 
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-interface DataInterface
-{
-    public function get($key);
+use \Symfony\Component\HttpFoundation\StreamedResponse;
+use Sse\Event;
+use Sse\SSE;
 
-    public function set($key, $value);
+class TimeEvent implements Event {
+    public function check(){
+        return true;
+    }
 
-    public function delete($key);
-
-    public function has($key);
+    public function update(){
+        return date('l, F jS, Y, h:i:s A');
+    }
 }
+
+$sse = new SSE;
+$sse->exec_limit=10;
+$sse->addEventListener('time', new TimeEvent());
+$response = $sse->createResponse();
+
+$response->send();

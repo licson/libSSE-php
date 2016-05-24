@@ -31,16 +31,39 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\Mechnisms;
 
 
-interface DataInterface
+class XCacheMechnism extends AbstractMechnism
 {
-    public function get($key);
 
-    public function set($key, $value);
+    protected $lifetime = 0;
 
-    public function delete($key);
+    public function __construct(array $parameter)
+    {
+        if (!extension_loaded('xcache')) {
+            throw new \RuntimeException('XCache is not enabled, Unable to use XCacheMechnism');
+        }
+        parent::__construct($parameter);
+    }
 
-    public function has($key);
+    public function has($key)
+    {
+        return xcache_isset($key);
+    }
+
+    public function set($key, $value)
+    {
+        return xcache_set($key, $value, $this->lifetime);
+    }
+
+    public function get($key)
+    {
+        return xcache_get($key);
+    }
+
+    public function delete($key)
+    {
+        return xcache_unset($key);
+    }
 }

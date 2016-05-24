@@ -1,0 +1,15 @@
+language: php
+php:
+  - '5.3'
+  - '5.4'
+  - '5.6'
+  - '7.0'
+  - hhvm
+  - nightly
+
+install:
+  - cat composer.json
+  - composer self-update
+  - composer install -o --profile
+
+script: vendor/bin/phpunit

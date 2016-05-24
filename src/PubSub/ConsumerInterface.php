@@ -31,16 +31,32 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\PubSub;
 
-
-interface DataInterface
+/**
+ * Interface ConsumerInterface
+ *
+ * To receive message for publisher
+ * and handle it.
+ *
+ * @package Sse\PubSub
+ */
+interface ConsumerInterface
 {
-    public function get($key);
+    /**
+     * Subscribe for a channel.
+     * The callback function should accept 1 argument which is the message
+     *
+     * @param string $channel name of channel
+     * @param \Closure $callback Function done after receive message
+     *
+     */
+    public function subscribe($channel, \Closure $callback);
 
-    public function set($key, $value);
-
-    public function delete($key);
-
-    public function has($key);
+    /**
+     * Stop subscribing a channel
+     *
+     * @param string $channel Channel name.
+     */
+    public function unsubscribe($channel);
 }

@@ -31,16 +31,41 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse;
+namespace Sse\Tests\Mechnisms;
 
 
-interface DataInterface
+use Sse\Mechnisms\FileMechnism;
+
+class FileMechnismTest extends \PHPUnit_Framework_TestCase
 {
-    public function get($key);
+    public function testConstruct()
+    {
+        $storage = new FileMechnism(array(
+            'path' => '/tmp/sse'
+        ));
 
-    public function set($key, $value);
+        $this->assertInstanceOf('Sse\\Mechnisms\\FileMechnism', $storage);
 
-    public function delete($key);
+        rmdir('/tmp/sse');
+    }
 
-    public function has($key);
+    public function testSavePath()
+    {
+        $storage = new FileMechnism(array(
+            'path' => '/tmp/sse'
+        ));
+
+        $this->assertEquals('/tmp/sse', $storage->getPath());
+        $this->assertTrue(is_dir(realpath($storage->getPath())));
+
+        rmdir('/tmp/sse');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testConstructException()
+    {
+        $storage = new FileMechnism(array());
+    }
 }
