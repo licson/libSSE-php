@@ -10,6 +10,7 @@ php:
 install:
   - cat composer.json
   - composer self-update
+  - rm composer.lock
   - composer install -o --profile
 
 script: vendor/bin/phpunit
