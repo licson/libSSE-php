@@ -2,6 +2,7 @@ libSSE-php
 ==========
 
 [![License](https://img.shields.io/badge/License-MIT-428F7E.svg)](LICENSE.md)
+[![Build Status](https://travis-ci.org/tonyhhyip/libSSE-php.svg?branch=master)](https://travis-ci.org/tonyhhyip/libSSE-php)
 
 An easy-to-use, object-orienlated library for Server-Sent Events
 
