@@ -53,7 +53,7 @@ class SSE {
     private $config = array(
         'sleep_time' => 0.5,                // seconds to sleep after the data has been sent
         'exec_limit' => 600,                // the time limit of the script in seconds
-        'client_reconnect' => true,            // the time client to reconnect after connection has lost in seconds
+        'client_reconnect' => 1,            // the time client to reconnect after connection has lost in seconds
         'allow_cors' => false,              // Allow Cross-Origin Access?
         'keep_alive_time' => 300,           // The interval of sending a signal to keep the connection alive
         'is_reconnect' => false,            // A read-only flag indicates whether the user reconnects
