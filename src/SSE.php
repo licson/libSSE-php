@@ -154,7 +154,8 @@ class SSE {
 
         $response = new StreamedResponse($callback, Response::HTTP_OK, array(
             'Content-Type' => 'text/event-stream',
-            'Cache-Control' => 'no-cache'
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'off' // Disables FastCGI Buffering on Nginx
         ));
 
         if($this->allow_cors){
