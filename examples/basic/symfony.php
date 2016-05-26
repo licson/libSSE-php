@@ -54,7 +54,7 @@ class TimeEvent implements Event {
 }
 
 $sse = new SSE;
-$sse->exec_limit=10;
+$sse->exec_limit = 10;
 $sse->addEventListener('time', new TimeEvent());
 $response = $sse->createResponse();
 

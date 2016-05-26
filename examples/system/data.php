@@ -32,5 +32,6 @@ class SysEvent extends TimedEvent { // Beware: use SSETimedEvent for sending dat
 }
 
 $sse = new SSE();
+$sse->exec_limit = 60;
 $sse->addEventListener('data', new SysEvent());
 $sse->start();
