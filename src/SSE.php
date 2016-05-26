@@ -40,12 +40,14 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class SSE {
 
     /**
+     * 
      * @var array<\SSE\Event>
      */
     private $handlers = array();
 
     /**
      * Event ID.
+     *
      * @var int
      */
     private $id = 0;
@@ -110,6 +112,8 @@ class SSE {
 
     /**
      * Start the event loop
+     *
+     * @return null
      */
     public function start(){
         $response = $this->createResponse();
@@ -117,7 +121,8 @@ class SSE {
     }
 
     /**
-     * Create a Response to send event
+     * Returns a Symfony HTTPFoundation StreamResponse.
+     *
      * @return StreamedResponse
      */
     public function createResponse()
@@ -126,9 +131,9 @@ class SSE {
         $that = $this;
         $callback = function () use ($that) {
             $start = time(); // Record start time
-            echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	//set the retry interval for the client
+            echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	// Set the retry interval for the client
             while (true) {
-                // Leave the loop if there are no morer handlers
+                // Leave the loop if there are no more handlers
                 if (!$that->hasEventListener()) {
                     break;
                 }
@@ -171,7 +176,7 @@ class SSE {
         if($this->allow_cors){
             $response->headers->set('Access-Control-Allow-Origin', '*');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
-        };
+        }
 
         if($this->use_chunked_encoding)
             $response->headers->set('Transfer-encoding', 'chunked');
