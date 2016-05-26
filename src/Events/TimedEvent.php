@@ -39,10 +39,14 @@ use Sse\Utils;
 abstract class TimedEvent implements Event
 {
     /**
+     * The time interval between two event triggers.
+     *
      * @var int
      */
-    private $period = 1;
+    protected $period = 1;
     /**
+     * The creation time of the event. 
+     *
      * @var int
      */
     private $start = 0;
