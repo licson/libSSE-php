@@ -59,6 +59,7 @@ class LatestMessage implements Event {
     }
 
     public function check(){
+        global $sse;
         // Fetch data from the data instance
         $this->data = json_decode($this->storage->get('message'));
         
