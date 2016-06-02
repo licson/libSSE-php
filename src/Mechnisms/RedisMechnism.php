@@ -31,30 +31,39 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse\Events;
+namespace Sse\Mechnisms;
 
-use Sse\Event;
-use Sse\Utils;
+use Predis\Client;
 
-abstract class TimedEvent implements Event
+class RedisMechnism extends AbstractMechnism
 {
-    /**
-     * The time interval between two event triggers.
-     *
-     * @var int
-     */
-    protected $period = 1;
-    /**
-     * The creation time of the event. 
-     *
-     * @var int
-     */
-    private $start = 0;
 
-    public function check()
+    private $client;
+
+
+    public function __construct(array $param)
     {
-        if ($this->start === 0)
-            $this->start = time();
-        return Utils::timeMod($this->start, $this->period) === 0;
+        parent::__construct($param);
+        $this->client = new Client($param['server']);
+    }
+
+    public function get($key)
+    {
+        return $this->client->get($key);
+    }
+
+    public function set($key, $value)
+    {
+        return $this->client->setex($key, $this->lifetime, $value);
+    }
+
+    public function delete($key)
+    {
+        return $this->client->del($key);
+    }
+
+    public function has($key)
+    {
+        return $this->client->exists($key);
     }
 }

@@ -122,6 +122,16 @@ Desktop.ini
 /vendor
 
 ############
+## PhpUnit
+############
+phpunit.xml
+
+############
 ## JetBrain
 ############
 /.idea
+
+############
+## Node.js Dev
+############
+/node_modules

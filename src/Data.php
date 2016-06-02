@@ -27,7 +27,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @category libSSE-php
- * @author   Tony Yip <tony@opensource.hk>
+ * @author   Licson Lee <licson0729@gmail.com>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -55,7 +55,7 @@ class Data implements DataInterface
     /**
      * Data constructor.
      *
-     * @param string $method the mechnism to use
+     * @param string $mechnism the mechnism to use
      * @param array $credinals
      */
     public function __construct($mechnism, array $credinals = array())
@@ -82,8 +82,13 @@ class Data implements DataInterface
     public static function fireOnInitial()
     {
         $classes = array(
-            'apc' =>'Sse\\Mechnisms\\ApcMechnism',
-            'file' => 'Sse\\Mechnisms\\FileMechnism'
+            'apc'       =>'Sse\\Mechnisms\\ApcMechnism',
+            'file'      => 'Sse\\Mechnisms\\FileMechnism',
+            'memcache'  => 'Sse\\Mechnisms\\MemcacheMechnism',
+            'mongo'     => 'Sse\\Mechnisms\\MongoMechnism',
+            'pdo'       => 'Sse\\Mechnisms\\PdoMechnism',
+            'redis'     => 'Sse\\Mechnisms\\RedisMechnism',
+            'xcache'    => 'Sse\\Mechnisms\\XCacheMechnism',
         );
 
         foreach ($classes as $class => $mechnism) {
@@ -104,5 +109,30 @@ class Data implements DataInterface
     public function delete($key)
     {
         return $this->mechnism->delete($key);
+    }
+
+    public function has($key)
+    {
+        return $this->mechnism->has($key);
+    }
+
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    public function __set($key, $value)
+    {
+        $this->set($key, $value);
+    }
+
+    public function __unset($name)
+    {
+        $this->delete($name);
+    }
+
+    public function __isset($key)
+    {
+        return $this->has($key);
     }
 }

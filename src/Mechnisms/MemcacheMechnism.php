@@ -31,30 +31,45 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse\Events;
+namespace Sse\Mechnisms;
 
-use Sse\Event;
-use Sse\Utils;
+use Memcached;
 
-abstract class TimedEvent implements Event
+class MemcacheMechnism extends AbstractMechnism
 {
-    /**
-     * The time interval between two event triggers.
-     *
-     * @var int
-     */
-    protected $period = 1;
-    /**
-     * The creation time of the event. 
-     *
-     * @var int
-     */
-    private $start = 0;
 
-    public function check()
+    private $connection;
+
+    protected $lifetime = 0;
+
+    public function __construct(array $parameter)
     {
-        if ($this->start === 0)
-            $this->start = time();
-        return Utils::timeMod($this->start, $this->period) === 0;
+        parent::__construct($parameter);
+        $this->connection = isset($parameter['memcache_id']) ? new Memcached($parameter['memcache_id']) : new Memcached;
+        if (isset($parameter['server'])) {
+            $this->connection->addServers($parameter['server']);
+        }
+    }
+
+    public function get($key)
+    {
+        return $this->connection->get($key);
+    }
+
+    public function set($key, $value)
+    {
+        $this->connection->set($key, $value, $this->lifetime ? $this->lifetime + time() : 0);
+        return $this->connection->getResultCode() === Memcached::RES_STORED;
+    }
+
+    public function delete($key)
+    {
+        $this->connection->delete($key);
+        return $this->connection->getResultCode() === Memcached::RES_DELETED;
+    }
+
+    public function has($key)
+    {
+        return parent::has($key) && $this->connection->getResultCode() === Memcached::RES_SUCCESS;
     }
 }

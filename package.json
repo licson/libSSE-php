@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-phpunit": "^0.14.0"
+  }
+}

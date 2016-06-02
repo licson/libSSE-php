@@ -31,30 +31,39 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse\Events;
+namespace Sse\Mechnisms;
 
-use Sse\Event;
-use Sse\Utils;
 
-abstract class TimedEvent implements Event
+class XCacheMechnism extends AbstractMechnism
 {
-    /**
-     * The time interval between two event triggers.
-     *
-     * @var int
-     */
-    protected $period = 1;
-    /**
-     * The creation time of the event. 
-     *
-     * @var int
-     */
-    private $start = 0;
 
-    public function check()
+    protected $lifetime = 0;
+
+    public function __construct(array $parameter)
     {
-        if ($this->start === 0)
-            $this->start = time();
-        return Utils::timeMod($this->start, $this->period) === 0;
+        if (!extension_loaded('xcache')) {
+            throw new \RuntimeException('XCache is not enabled, Unable to use XCacheMechnism');
+        }
+        parent::__construct($parameter);
+    }
+
+    public function has($key)
+    {
+        return xcache_isset($key);
+    }
+
+    public function set($key, $value)
+    {
+        return xcache_set($key, $value, $this->lifetime);
+    }
+
+    public function get($key)
+    {
+        return xcache_get($key);
+    }
+
+    public function delete($key)
+    {
+        return xcache_unset($key);
     }
 }

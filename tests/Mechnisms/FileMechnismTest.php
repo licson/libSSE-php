@@ -31,30 +31,41 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse\Events;
+namespace Sse\Tests\Mechnisms;
 
-use Sse\Event;
-use Sse\Utils;
 
-abstract class TimedEvent implements Event
+use Sse\Mechnisms\FileMechnism;
+
+class FileMechnismTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * The time interval between two event triggers.
-     *
-     * @var int
-     */
-    protected $period = 1;
-    /**
-     * The creation time of the event. 
-     *
-     * @var int
-     */
-    private $start = 0;
-
-    public function check()
+    public function testConstruct()
     {
-        if ($this->start === 0)
-            $this->start = time();
-        return Utils::timeMod($this->start, $this->period) === 0;
+        $storage = new FileMechnism(array(
+            'path' => '/tmp/sse'
+        ));
+
+        $this->assertInstanceOf('Sse\\Mechnisms\\FileMechnism', $storage);
+
+        rmdir('/tmp/sse');
+    }
+
+    public function testSavePath()
+    {
+        $storage = new FileMechnism(array(
+            'path' => '/tmp/sse'
+        ));
+
+        $this->assertEquals('/tmp/sse', $storage->getPath());
+        $this->assertTrue(is_dir(realpath($storage->getPath())));
+
+        rmdir('/tmp/sse');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testConstructException()
+    {
+        $storage = new FileMechnism(array());
     }
 }

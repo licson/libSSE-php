@@ -33,39 +33,70 @@
 
 namespace Sse\Mechnisms;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-use Sse\DataInterface;
-
-class ApcMechnism extends AbstractMechnism
+class MockSessionMechnism extends AbstractMechnism
 {
 
-    protected $lifetime = 0;
+    /**
+     * @var SessionInterface
+     */
+    private $session;
 
-    public function __construct(array $args)
+    public function __construct(array $param)
     {
-        parent::__construct($args);
-        if (!extension_loaded('apc')) {
-            throw new \RuntimeException('Unable to use ApcMechnism as APC is disabled');
+        parent::__construct($param);
+        if (!isset($param['interface']) || ! $param['interface'] instanceof SessionInterface) {
+            throw new \InvalidArgumentException('SessionInterface is missed');
         }
+
+        $this->session = $param['interface'];
     }
 
     public function get($key)
     {
-        return apc_fetch($key);
+        if (!$this->session->isStarted())
+            $this->session->start();
+
+        $value =  $this->session->get($key);
+        $this->session->save();
+        return $value;
     }
 
     public function set($key, $value)
     {
-        return apc_store($key, $value, $this->lifetime);
+        try {
+            if (!$this->session->isStarted()) {
+                $this->session->start();
+            }
+
+            $this->session->set($key, $value);
+            $this->session->save();
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public function delete($key)
     {
-        return apc_delete($key);
+        if (!$this->session->isStarted()) {
+            $this->session->start();
+        }
+
+        $this->session->remove($key);
+        $this->session->save();
     }
 
     public function has($key)
     {
-        return apc_exists($key);
+        if (!$this->session->isStarted()) {
+            $this->session->start();
+        }
+
+        $exists = $this->session->has($key);
+        $this->session->save();
+        return $exists;
     }
 }

@@ -31,30 +31,50 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse\Events;
+namespace Sse\Mechnisms;
 
-use Sse\Event;
-use Sse\Utils;
 
-abstract class TimedEvent implements Event
+use Sse\DataInterface;
+
+abstract class AbstractMechnism implements DataInterface
 {
-    /**
-     * The time interval between two event triggers.
-     *
-     * @var int
-     */
-    protected $period = 1;
-    /**
-     * The creation time of the event. 
-     *
-     * @var int
-     */
-    private $start = 0;
 
-    public function check()
+    /**
+     * Seconds of inactive timeout
+     * @var int
+     */
+    protected $lifetime = 6000;
+
+    public function __construct(array $parameter)
     {
-        if ($this->start === 0)
-            $this->start = time();
-        return Utils::timeMod($this->start, $this->period) === 0;
+        if (array_key_exists('gc_lifetime', $parameter)) {
+            $this->lifetime = $parameter['gc_lifetime'];
+        }
+    }
+
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    public function __set($key, $value)
+    {
+        $this->set($key, $value);
+    }
+
+    public function __unset($name)
+    {
+        $this->delete($name);
+    }
+
+    public function has($key)
+    {
+        $value = $this->get($key);
+        return !!$value;
+    }
+
+    public function __isset($key)
+    {
+        return $this->has($key);
     }
 }

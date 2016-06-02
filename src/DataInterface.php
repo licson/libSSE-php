@@ -27,7 +27,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @category libSSE-php
- * @author   Tony Yip <tony@opensource.hk>
+ * @author   Licson Lee <licson0729@gmail.com>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -41,4 +41,6 @@ interface DataInterface
     public function set($key, $value);
 
     public function delete($key);
+
+    public function has($key);
 }

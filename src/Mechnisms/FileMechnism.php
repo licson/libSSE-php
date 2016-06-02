@@ -27,7 +27,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @category libSSE-php
- * @author   Tony Yip <tony@opensource.hk>
+ * @author   Licson Lee <licson0729@gmail.com>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -36,25 +36,20 @@ namespace Sse\Mechnisms;
 
 use Sse\DataInterface;
 
-class FileMechnism implements DataInterface
+class FileMechnism extends AbstractMechnism
 {
     private $path;
-    
-    private $lifetime;
 
     public function __construct(array $arguments)
     {
         if (!array_key_exists('path', $arguments)) {
             throw new \InvalidArgumentException('Key path does not exists in arguments');
         }
+        parent::__construct($arguments);
 
         $this->path = $arguments['path'];
         if (!is_dir($this->path)) {
             mkdir($this->path);
-        }
-
-        if (array_key_exists('gc_lifetime', $arguments)) {
-            $this->lifetime = $arguments['gc_lifetime'];
         }
     }
 
@@ -76,12 +71,19 @@ class FileMechnism implements DataInterface
         return $result;
     }
 
-    public function delete($key){
-        $path = $this->path.'/sess_'.sha1($key);
+    public function delete($key)
+    {
+        $path = $this->getFileName($key);
         if(file_exists($path)){
             unlink($path);
         }
         return true;
+    }
+
+    public function has($key)
+    {
+        $file = $this->getFileName($key);
+        return file_exists($file);
     }
 
     private function gc(){
@@ -98,5 +100,10 @@ class FileMechnism implements DataInterface
     protected function getFileName($key)
     {
         return $this->path.'/sess_'.sha1($key);
+    }
+
+    public function getPath()
+    {
+        return $this->path;
     }
 }

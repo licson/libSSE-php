@@ -31,30 +31,31 @@
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
-namespace Sse\Events;
+/**
+ * It has same result in data, but using the Symfony HttpFoundation Component
+ *
+ * Able to be used for Symfony or Laravel
+ */
 
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use \Symfony\Component\HttpFoundation\StreamedResponse;
 use Sse\Event;
-use Sse\Utils;
+use Sse\SSE;
 
-abstract class TimedEvent implements Event
-{
-    /**
-     * The time interval between two event triggers.
-     *
-     * @var int
-     */
-    protected $period = 1;
-    /**
-     * The creation time of the event. 
-     *
-     * @var int
-     */
-    private $start = 0;
+class TimeEvent implements Event {
+    public function check(){
+        return true;
+    }
 
-    public function check()
-    {
-        if ($this->start === 0)
-            $this->start = time();
-        return Utils::timeMod($this->start, $this->period) === 0;
+    public function update(){
+        return date('l, F jS, Y, h:i:s A');
     }
 }
+
+$sse = new SSE;
+$sse->exec_limit = 10;
+$sse->addEventListener('time', new TimeEvent());
+$response = $sse->createResponse();
+
+$response->send();
