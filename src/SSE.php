@@ -33,14 +33,15 @@
 
 namespace Sse;
 
-use \Symfony\Component\HttpFoundation\Request;
+use ArrayAccess;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class SSE {
+class SSE implements ArrayAccess{
 
     /**
-     * @var array<\SSE\Event>
+     * @var array
      */
     private $handlers = array();
 
@@ -50,6 +51,10 @@ class SSE {
      */
     private $id = 0;
 
+    /**
+     * Config Setting
+     * @var array
+     */
     private $config = array(
         'sleep_time' => 0.5,                // seconds to sleep after the data has been sent
         'exec_limit' => 600,                // the time limit of the script in seconds
@@ -63,7 +68,8 @@ class SSE {
     /**
      * SSE constructor.
      *
-     * @param Request|null $request
+     * @param Request $request
+     * @return void
      */
     public function __construct(Request $request = null)
     {
@@ -82,6 +88,7 @@ class SSE {
      * Attach a event handler
      * @param string $event the event name
      * @param Event $handler the event handler
+     * @return void
      */
     public function addEventListener($event, Event $handler)
     {
@@ -92,17 +99,27 @@ class SSE {
      * remove a event handler
      *
      * @param string $event the event name
+     * @return void
      */
     public function removeEventListener($event)
     {
         unset($this->handlers[$event]);
     }
 
+    /**
+     * Get all the listeners
+     *
+     * @return array
+     */
     public function getEventListeners()
     {
         return $this->handlers;
     }
 
+    /**
+     * Has listener
+     * @return bool
+     */
     public function hasEventListener()
     {
         return count($this->handlers) !== 0;
@@ -178,12 +195,22 @@ class SSE {
         return $response;
     }
 
+    /**
+     * Get the id for new message
+     *
+     * @return int
+     */
     public function getNewId()
     {
         $this->id += 1;
         return $this->id;
     }
 
+    /**
+     * Initial System
+     *
+     * @return void
+     */
     protected function init()
     {
         @set_time_limit(0); // Disable time limit
@@ -202,16 +229,35 @@ class SSE {
         ob_implicit_flush(1);
     }
 
+    /**
+     * Get config of SSE
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function get($key)
     {
         return $this->config[$key];
     }
 
+    /**
+     * Get config of SSE
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function __get($key)
     {
         return $this->get($key);
     }
 
+    /**
+     * Set config of SSE
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     public function set($key, $value)
     {
         if (in_array($key, array('is_reconnect'))) {
@@ -220,8 +266,63 @@ class SSE {
         $this->config[$key] = $value;
     }
 
+    /**
+     * Set config of SSE
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     public function __set($key, $value)
     {
         $this->set($key, $value);
+    }
+
+    /**
+     * Determine if the given attribute exists.
+     *
+     * @param string $offset
+     * @return bool
+     */
+    public function offsetExists($offset)
+    {
+        return isset($this->config[$offset]);
+    }
+
+    /**
+     * Get the value for a given offset.
+     * @param string $offset
+     * @return mixed
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * Set the value for a given offset.
+     *
+     * @param string $offset
+     * @param mixed $value
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * Unset the value for a given offset.
+     *
+     * @param  string $offset
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        $keys = array('sleep_time', 'exec_limit', 'client_reconnect', 'allow_cors', 'keep_alive_time', 'is_reconnect', 'use_chunked_encoding');
+        if (in_array($offset, $keys)) {
+            throw new \InvalidArgumentException($offset . ' is not allowed to removed');
+        }
+
+        unset($this->config[$offset]);
     }
 }

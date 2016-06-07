@@ -57,6 +57,7 @@ class Data implements DataInterface
      *
      * @param string $mechnism the mechnism to use
      * @param array $credinals
+     * @return void
      */
     public function __construct($mechnism, array $credinals = array())
     {
@@ -71,14 +72,20 @@ class Data implements DataInterface
     }
 
     /**
+     * Register Data Mechnism
+     *
      * @param string $mechnism
      * @param string $class
+     * @return void
      */
     public static function register($mechnism, $class)
     {
         static::$registers[$mechnism] = $class;
     }
 
+    /**
+     * Fire the initial job
+     */
     public static function fireOnInitial()
     {
         $classes = array(

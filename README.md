@@ -102,6 +102,7 @@ Symfony
     <?php
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+    use Sse\SSE;
     
     class DefaultController extends Controller
     {
@@ -110,7 +111,7 @@ Symfony
          */
         public function sseAction()
         {
-            $sse = new Sse\SSE();
+            $sse = new SSE();
             // Add your event listener
             return $sse->createResponse();
         }
@@ -127,7 +128,7 @@ Laravel
     {
         public function sse()
         {
-             $sse = new SSE\SSE();
+             $sse = new SSE();
              // Add your event listener
              return $sse->createResponse();
         }

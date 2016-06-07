@@ -48,6 +48,7 @@ interface Event
 
     /**
      * Get Updated Data.
+     *
      * @return string
      */
     public function update();
