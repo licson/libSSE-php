@@ -4,7 +4,7 @@
   "version": "2.1.0",
   "type": "library",
   "keywords": ["sse"],
-  "homepage": "https://github.com/tonyhhyip/libSSE-php",
+  "homepage": "https://github.com/licson0729/libSSE-php",
   "license": "MIT",
 
   "authors": [
@@ -24,9 +24,9 @@
   ],
 
   "support": {
-    "email": "tony@opensource.hk",
+    "email": "licson0729@gmail.com",
     "issues": "https://github.com/licson0729/libSSE-php/issues/new",
-    "source": "https://github.com/tonyhhyip/libSSE-php"
+    "source": "https://github.com/licson0729/libSSE-php"
   },
 
   "require": {
@@ -45,6 +45,6 @@
   },
 
   "suggest": {
-    "predis/predis": "For using RedisMechnism and Redis PubSub"
+    "predis/predis": "For using RedisMechnism"
   }
 }

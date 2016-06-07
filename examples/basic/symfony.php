@@ -27,7 +27,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @category libSSE-php
- * @author   Tony Yip <tony@opensource.hk>
+ * @author   Licson Lee <licson0729@gmail.com>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -54,7 +54,7 @@ class TimeEvent implements Event {
 }
 
 $sse = new SSE;
-$sse->exec_limit=10;
+$sse->exec_limit = 10;
 $sse->addEventListener('time', new TimeEvent());
 $response = $sse->createResponse();
 

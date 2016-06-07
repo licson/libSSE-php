@@ -27,7 +27,7 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @category libSSE-php
- * @author   Tony Yip <tony@opensource.hk>
+ * @author   Licson Lee <licson0729@gmail.com>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -47,6 +47,7 @@ class SSE implements ArrayAccess{
 
     /**
      * Event ID.
+     *
      * @var int
      */
     private $id = 0;
@@ -58,7 +59,7 @@ class SSE implements ArrayAccess{
     private $config = array(
         'sleep_time' => 0.5,                // seconds to sleep after the data has been sent
         'exec_limit' => 600,                // the time limit of the script in seconds
-        'client_reconnect' => true,            // the time client to reconnect after connection has lost in seconds
+        'client_reconnect' => 1,            // the time client to reconnect after connection has lost in seconds
         'allow_cors' => false,              // Allow Cross-Origin Access?
         'keep_alive_time' => 300,           // The interval of sending a signal to keep the connection alive
         'is_reconnect' => false,            // A read-only flag indicates whether the user reconnects
@@ -127,6 +128,8 @@ class SSE implements ArrayAccess{
 
     /**
      * Start the event loop
+     *
+     * @return null
      */
     public function start(){
         $response = $this->createResponse();
@@ -134,7 +137,8 @@ class SSE implements ArrayAccess{
     }
 
     /**
-     * Create a Response to send event
+     * Returns a Symfony HTTPFoundation StreamResponse.
+     *
      * @return StreamedResponse
      */
     public function createResponse()
@@ -143,9 +147,9 @@ class SSE implements ArrayAccess{
         $that = $this;
         $callback = function () use ($that) {
             $start = time(); // Record start time
-            echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	//set the retry interval for the client
+            echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	// Set the retry interval for the client
             while (true) {
-                // Leave the loop if there are no morer handlers
+                // Leave the loop if there are no more handlers
                 if (!$that->hasEventListener()) {
                     break;
                 }
@@ -181,13 +185,14 @@ class SSE implements ArrayAccess{
 
         $response = new StreamedResponse($callback, Response::HTTP_OK, array(
             'Content-Type' => 'text/event-stream',
-            'Cache-Control' => 'no-cache'
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'off' // Disables FastCGI Buffering on Nginx
         ));
 
         if($this->allow_cors){
             $response->headers->set('Access-Control-Allow-Origin', '*');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
-        };
+        }
 
         if($this->use_chunked_encoding)
             $response->headers->set('Transfer-encoding', 'chunked');
