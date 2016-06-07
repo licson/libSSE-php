@@ -9,12 +9,18 @@ An easy-to-use, object-orienlated library for Server-Sent Events
 Updates
 =========
 
-1. Namespace is added for libSSE.
-2. `SSEEvent` become `Sse\Event` which is an interface
-3. Cleaner code
-4. Available on **packagist** as `tonyhhyip/sse`
-5. Static method `time_mod` and `time_diff` of `SSEUtils` has been changed into `timeMod` and `timeDiff` of `Sse\Utils`
-6. `has` method is added to DataInterface. Properties access method is implemented by magic methods.
+1. Add Support of Symfony Http Foundation Compoent
+2. SSE use magic method instead of direct access
+3. Add Redis and Memcahce Mechnism
+4. Add SessionLike Mechnism
+5. Fixed event loop handling where removing handlers at runtime can result in a broken state.
+6. Use Symfony HttpFoundation StreamedResponse to replace the old version
+7. Add Changelog and contributing guide.
+
+Special For PHP 5.3 and 5.4
+============================
+If you see and error message like `your PHP version does not satisfy that requirement.`,
+please remove composer.lock and re-install it.
 
 Documentation
 --------------
@@ -89,7 +95,7 @@ Compatibility
 ==============
 
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
-However, polyfill for server-sent events is avaliable.
+However, polyfill for server-sent events is available.
 Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted.
 There's some settings in the library that can fix it.
 
@@ -133,3 +139,7 @@ Laravel
              return $sse->createResponse();
         }
     }
+
+Contribution
+-------------
+Please see the [CONTRIBUTING.md](CONTRIBUTING.md).
