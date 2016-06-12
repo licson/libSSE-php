@@ -38,7 +38,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class SSE implements ArrayAccess{
+class SSE implements ArrayAccess
+{
 
     /**
      * @var array

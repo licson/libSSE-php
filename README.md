@@ -125,20 +125,7 @@ Symfony
     
 Laravel
 --------
-
-    <?php
-    use App\Http\Controller;
-    use Sse\SSE;
-    
-    class FooController extends Controller
-    {
-        public function sse()
-        {
-             $sse = new SSE();
-             // Add your event listener
-             return $sse->createResponse();
-        }
-    }
+Please use [laravel-sse](https://github.com/tonyhhyip/laravel-sse).
 
 Contribution
 -------------
