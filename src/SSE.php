@@ -54,6 +54,11 @@ class SSE implements ArrayAccess
     private $id = 0;
 
     /**
+     * @var int
+     */
+    private $start;
+
+    /**
      * Config Setting
      * @var array
      */
@@ -86,6 +91,7 @@ class SSE implements ArrayAccess
         $this->config['is_reconnect'] = $request->headers->has('Last-Event-ID');
 
     }
+
     /**
      * Attach a event handler
      * @param string $event the event name
@@ -138,6 +144,79 @@ class SSE implements ArrayAccess
     }
 
     /**
+     * Send Data in buffer to client
+     */
+    public function flush()
+    {
+        @ob_flush();
+        @flush();
+    }
+
+    /**
+     * Send Data
+     *
+     * @param string $content
+     */
+    private function send($content)
+    {
+        print($content);
+    }
+
+    /**
+     * Send a SSE data block
+     *
+     * @param mixed $id Event ID
+     * @param string $data Event Data
+     * @param string $name Event Name
+     */
+    public function sendBlock($id, $data, $name = null)
+    {
+        $this->send("id: {$id}\n");
+        if (strlen($name) && $name !== null) {
+            $this->send("event: {$name}\n");
+        }
+
+        $this->send($this->wrapData($data) . "\n\n");
+    }
+
+    /**
+     * Create SSE data string
+     *
+     * @param string $string data to be processed
+     * @return string
+     */
+    private function wrapData($string)
+    {
+        return 'data:' . str_replace("\n","\ndata: ", $string);
+    }
+
+    /**
+     * Get time start
+     * @return int
+     */
+    public function getUptime()
+    {
+        return time() - $this->start;
+    }
+
+    /**
+     * Get the number tick
+     * @return bool
+     */
+    public function isTick()
+    {
+        return $this->getUptime() % $this->keep_alive_time === 0;
+    }
+
+    /**
+     * Sleep the process
+     */
+    public function sleep()
+    {
+        usleep($this->sleep_time * 1000000);
+    }
+
+    /**
      * Returns a Symfony HTTPFoundation StreamResponse.
      *
      * @return StreamedResponse
@@ -147,7 +226,7 @@ class SSE implements ArrayAccess
         $this->init();
         $that = $this;
         $callback = function () use ($that) {
-            $start = time(); // Record start time
+            $that->setStart(time());
             echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	// Set the retry interval for the client
             while (true) {
                 // Leave the loop if there are no more handlers
@@ -155,7 +234,7 @@ class SSE implements ArrayAccess
                     break;
                 }
 
-                if (Utils::timeMod($start, $that->keep_alive_time) == 0) {
+                if ($that->isTick()) {
                     // No updates needed, send a comment to keep the connection alive.
                     // From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
                     echo ': ' . sha1(mt_rand()) . "\n\n";
@@ -166,20 +245,19 @@ class SSE implements ArrayAccess
                     if ($handler->check()) { // Check if the data is avaliable
                         $data = $handler->update(); // Get the data
                         $id = $that->getNewId();
-                        Utils::sseBlock($id, $data, $event);
+                        $that->sendBlock($id, $data, $event);
                         
                         // Make sure the data has been sent to the client
-                        @ob_flush();
-                        @flush();
+                        $that->flush();
                     }
                 }
 
                 // Break if the time exceed the limit
-                if ($that->exec_limit !== 0 && Utils::timeDiff($start) > $that->exec_limit) {
+                if ($that->exec_limit !== 0 && $that->getUptime() > $that->exec_limit) {
                     break;
                 }
                 // Sleep
-                usleep($that->sleep_time * 1000000);
+                $that->sleep();
             }
         };
 
@@ -233,6 +311,16 @@ class SSE implements ArrayAccess
             ob_end_flush();
         }
         ob_implicit_flush(1);
+    }
+
+    public function setStart($start)
+    {
+        $this->start = $start;
+    }
+
+    public function getStart()
+    {
+        return $this->start;
     }
 
     /**

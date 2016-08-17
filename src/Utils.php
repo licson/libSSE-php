@@ -33,7 +33,10 @@
 
 namespace Sse;
 
-
+/**
+ * Class Utils
+ * @deprecated
+ */
 abstract class Utils
 {
     /**
@@ -41,6 +44,8 @@ abstract class Utils
      *
      * @param string $string data to be processed
      * @return string
+     *
+     * @deprecated Please use SSE::wrapData to replace
      */
     public static function sseData($string)
     {
@@ -53,6 +58,8 @@ abstract class Utils
      * @param mixed $id Event ID
      * @param string $data Event Data
      * @param string $name Event Name
+     *
+     * @deprecated Please use SSE::sendBlock to replace
      */
     public static function sseBlock($id, $data, $name = null)
     {
@@ -64,6 +71,10 @@ abstract class Utils
         static::sseSend(static::sseData($data) . "\n\n");
     }
 
+    /**
+     * @param string $content
+     * @deprecated Please use SSE::send to replace
+     */
     public static function sseSend($content)
     {
         print($content);
@@ -76,6 +87,7 @@ abstract class Utils
      * @param int $interval
      *
      * @return int
+     * @deprecated Please use SSE::wrapData to replace
      */
     public static function timeMod($start, $interval)
     {
@@ -87,6 +99,7 @@ abstract class Utils
      *
      * @param int $start
      * @return int
+     * @deprecated Please use SSE::wrapData to replace
      */
     public static function timeDiff($start)
     {
