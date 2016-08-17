@@ -33,10 +33,6 @@
 
 namespace Sse;
 
-/**
- * Class Utils
- * @deprecated
- */
 abstract class Utils
 {
     /**
@@ -87,7 +83,6 @@ abstract class Utils
      * @param int $interval
      *
      * @return int
-     * @deprecated Please use SSE::wrapData to replace
      */
     public static function timeMod($start, $interval)
     {
@@ -99,7 +94,6 @@ abstract class Utils
      *
      * @param int $start
      * @return int
-     * @deprecated Please use SSE::wrapData to replace
      */
     public static function timeDiff($start)
     {
