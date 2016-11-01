@@ -38,6 +38,7 @@ Quick use
 
 Server-side(PHP):
 
+```php
 	<?php
 	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
 	
@@ -45,7 +46,7 @@ Server-side(PHP):
 	use Sse\SSE;
 	
 	//create the event handler
-	class YourEventHandler implements SSEEvent {
+	class YourEventHandler implements Event {
 		public function update(){
 			//Here's the place to send data
 			return 'Hello, world!';
@@ -57,18 +58,20 @@ Server-side(PHP):
 		}
 	}
 	
-	$sse = new SSE();//create a libSSE instance
-	$sse->addEventListener('event_name',new YourEventHandler());//register your event handler
+	$sse = new SSE(); //create a libSSE instance
+	$sse->addEventListener('event_name', new YourEventHandler());//register your event handler
 	$sse->start();//start the event loop
 	?>
+```
 
 Client-side(javascript):
-
+```javascript
 	var sse = new EventSource('path/to/your/sse/script.php');
 	sse.addEventListener('event_name',function(e){
 		var data = e.data;
 		//handle your data here
 	},false);
+```
 
 Settings
 ===========
@@ -76,6 +79,20 @@ Settings
 After you created the libSSE instance, there's some settings for you to control the behaviour.
 Below is the settings provided by the library.
 
+```php
+
+<?php
+	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
+	
+	use Sse\SSE;
+	
+	$sse = new SSE();
+    $sse->set($property, $value);
+```
+
+
+Direct access of property is kept with magic method for backward compatible.
+```php
 	<?php
 	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
 	
@@ -90,7 +107,7 @@ Below is the settings provided by the library.
 	$sse->keep_alive_time = 600; //The interval of sending a signal to keep the connection alive. Default: 300 seconds.
 	$sse->allow_cors = true; //Allow cross-domain access? Default: false. If you want others to access this must set to true.
 	?>
-
+```
 Compatibility
 ==============
 
@@ -104,7 +121,7 @@ Integration with Frameworks
 
 Symfony
 -----------
-
+```php
     <?php
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -122,7 +139,7 @@ Symfony
             return $sse->createResponse();
         }
     }
-    
+ ```   
 Laravel
 --------
 Please use [laravel-sse](https://github.com/tonyhhyip/laravel-sse).
