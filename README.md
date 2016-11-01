@@ -1,40 +1,18 @@
-libSSE-php
-==========
+# libSSE-php
 
 [![License](https://img.shields.io/badge/License-MIT-428F7E.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.org/tonyhhyip/libSSE-php.svg?branch=master)](https://travis-ci.org/tonyhhyip/libSSE-php)
 
-An easy-to-use, object-orienlated library for Server-Sent Events
+An easy-to-use, object-oriented library for Server-Sent Events
 
-Updates
-=========
+## Installation
 
-1. Add Support of Symfony Http Foundation Compoent
-2. SSE use magic method instead of direct access
-3. Add Redis and Memcahce Mechnism
-4. Add SessionLike Mechnism
-5. Fixed event loop handling where removing handlers at runtime can result in a broken state.
-6. Use Symfony HttpFoundation StreamedResponse to replace the old version
-7. Add Changelog and contributing guide.
+To install this package you'll need [composer](https://getcomposer.org/).
 
-Special For PHP 5.3 and 5.4
-============================
-If you see and error message like `your PHP version does not satisfy that requirement.`,
-please remove composer.lock and re-install it.
+Run `composer require tonyhhyip/sse`
 
-Documentation
---------------
 
-You may find it here.
-[https://github.com/licson0729/libSSE-php/wiki/libSSE-docs](https://github.com/licson0729/libSSE-php/wiki/libSSE-docs)
-
-Development
-============
-
-This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
-
-Quick use
-==========
+## Usage
 
 Server-side(PHP):
 
@@ -73,8 +51,9 @@ Client-side(javascript):
 	},false);
 ```
 
-Settings
-===========
+
+
+## Settings
 
 After you created the libSSE instance, there's some settings for you to control the behaviour.
 Below is the settings provided by the library.
@@ -107,6 +86,31 @@ Direct access of property is kept with magic method for backward compatible.
 	$sse->keep_alive_time = 600; //The interval of sending a signal to keep the connection alive. Default: 300 seconds.
 	$sse->allow_cors = true; //Allow cross-domain access? Default: false. If you want others to access this must set to true.
 	?>
+
+## Updates
+
+1. Add Support of Symfony Http Foundation Compoent
+2. SSE use magic method instead of direct access
+3. Add Redis and Memcahce Mechnism
+4. Add SessionLike Mechnism
+5. Fixed event loop handling where removing handlers at runtime can result in a broken state.
+6. Use Symfony HttpFoundation StreamedResponse to replace the old version
+7. Add Changelog and contributing guide.
+
+## Special For PHP 5.3 and 5.4
+If you see and error message like `your PHP version does not satisfy that requirement.`,
+please remove composer.lock and re-install it.
+
+## Documentation
+
+You may find it here.
+[https://github.com/licson0729/libSSE-php/wiki/libSSE-docs](https://github.com/licson0729/libSSE-php/wiki/libSSE-docs)
+
+## Development
+
+This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
+
+## Compatibility
 ```
 Compatibility
 ==============
@@ -116,12 +120,11 @@ However, polyfill for server-sent events is available.
 Also on shared hosting, it may disable PHP's `set_time_limit` function and the library may not work as excepted.
 There's some settings in the library that can fix it.
 
-Integration with Frameworks
-============================
+## Integration with Frameworks
 
-Symfony
------------
+### Symfony
 ```php
+
     <?php
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -140,10 +143,8 @@ Symfony
         }
     }
  ```   
-Laravel
---------
+### Laravel
 Please use [laravel-sse](https://github.com/tonyhhyip/laravel-sse).
 
-Contribution
--------------
+## Contribution
 Please see the [CONTRIBUTING.md](CONTRIBUTING.md).
