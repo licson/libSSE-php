@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -40,28 +41,43 @@ class RedisMechnism extends AbstractMechnism
 
     private $client;
 
-
+    /**
+     * @param array $param
+     * @return void
+     */
     public function __construct(array $param)
     {
         parent::__construct($param);
         $this->client = new Client($param['server']);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($key)
     {
         return $this->client->get($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function set($key, $value)
     {
         return $this->client->setex($key, $this->lifetime, $value);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($key)
     {
         return $this->client->del($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function has($key)
     {
         return $this->client->exists($key);

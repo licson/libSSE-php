@@ -28,19 +28,21 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
 namespace Sse\Mechnisms;
-
-
-use Sse\DataInterface;
 
 class ApcMechnism extends AbstractMechnism
 {
 
     protected $lifetime = 0;
 
+    /**
+     * @param array $args
+     * @return void
+     */
     public function __construct(array $args)
     {
         parent::__construct($args);
@@ -49,21 +51,33 @@ class ApcMechnism extends AbstractMechnism
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($key)
     {
         return apc_fetch($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function set($key, $value)
     {
         return apc_store($key, $value, $this->lifetime);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($key)
     {
         return apc_delete($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function has($key)
     {
         return apc_exists($key);

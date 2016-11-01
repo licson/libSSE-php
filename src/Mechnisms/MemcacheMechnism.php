@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -37,9 +38,14 @@ use Memcached;
 
 class MemcacheMechnism extends AbstractMechnism
 {
-
+    /**
+     * @var Memcached
+     */
     private $connection;
 
+    /**
+     * @var int
+     */
     protected $lifetime = 0;
 
     public function __construct(array $parameter)
@@ -51,23 +57,35 @@ class MemcacheMechnism extends AbstractMechnism
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($key)
     {
         return $this->connection->get($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function set($key, $value)
     {
         $this->connection->set($key, $value, $this->lifetime ? $this->lifetime + time() : 0);
         return $this->connection->getResultCode() === Memcached::RES_STORED;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($key)
     {
         $this->connection->delete($key);
         return $this->connection->getResultCode() === Memcached::RES_DELETED;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function has($key)
     {
         return parent::has($key) && $this->connection->getResultCode() === Memcached::RES_SUCCESS;
