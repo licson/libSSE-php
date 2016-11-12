@@ -2,7 +2,7 @@
 /**
  * libSSE-php
  *
- * Copyright (C) Tony Yip 2016.
+ * Copyright (C) Licson Lee, Tony Yip 2016.
  *
  * Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software
@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -44,6 +45,7 @@ abstract class TimedEvent implements Event
      * @var int
      */
     protected $period = 1;
+
     /**
      * The creation time of the event. 
      *
@@ -51,6 +53,9 @@ abstract class TimedEvent implements Event
      */
     private $start = 0;
 
+    /**
+     * @inheritdoc
+     */
     public function check()
     {
         if ($this->start === 0)

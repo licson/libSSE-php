@@ -2,7 +2,7 @@
 /**
  * libSSE-php
  *
- * Copyright (C) Tony Yip 2016.
+ * Copyright (C) Licson Lee, Tony Yip 2016.
  *
  * Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software
@@ -28,18 +28,23 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
 namespace Sse\Mechnisms;
 
-
-use Sse\DataInterface;
-
 class FileMechnism extends AbstractMechnism
 {
+    /**
+     * @var string
+     */
     private $path;
 
+    /**
+     * @param array $arguments
+     * @return void
+     */
     public function __construct(array $arguments)
     {
         if (!array_key_exists('path', $arguments)) {
@@ -53,6 +58,9 @@ class FileMechnism extends AbstractMechnism
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($key)
     {
         $file = $this->getFileName($key);
@@ -64,6 +72,9 @@ class FileMechnism extends AbstractMechnism
         return $content;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function set($key, $value)
     {
         $result = file_put_contents($this->path.'/sess_'.sha1($key),$value) === false ? false : true;
@@ -71,6 +82,9 @@ class FileMechnism extends AbstractMechnism
         return $result;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($key)
     {
         $path = $this->getFileName($key);
@@ -80,12 +94,18 @@ class FileMechnism extends AbstractMechnism
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function has($key)
     {
         $file = $this->getFileName($key);
         return file_exists($file);
     }
 
+    /**
+     * @return void
+     */
     private function gc(){
         if($this->lifetime == 0){
             return;
@@ -97,11 +117,18 @@ class FileMechnism extends AbstractMechnism
         }
     }
 
+    /**
+     * @param string $key
+     * @return string
+     */
     protected function getFileName($key)
     {
         return $this->path.'/sess_'.sha1($key);
     }
 
+    /**
+     * @return string
+     */
     public function getPath()
     {
         return $this->path;

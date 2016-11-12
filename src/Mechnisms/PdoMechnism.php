@@ -2,7 +2,7 @@
 /**
  * libSSE-php
  *
- * Copyright (C) Tony Yip 2016.
+ * Copyright (C) Licson Lee, Tony Yip 2016.
  *
  * Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software
@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -36,6 +37,12 @@ namespace Sse\Mechnisms;
 use PDO;
 use PDOException;
 
+/**
+ * Class PdoMechnism
+ * To use Data Mechnism with PDO
+ * @package Sse\Mechnisms
+ * @deprecated Please use MockSessionMechnism with PDO Session Store instead
+ */
 class PdoMechnism extends AbstractMechnism
 {
 
@@ -136,6 +143,10 @@ class PdoMechnism extends AbstractMechnism
      */
     private $gcCalled = false;
 
+    /**
+     * @param array $parameter
+     * @return void
+     */
     public function __construct(array $parameter)
     {
         parent::__construct($parameter);
@@ -152,6 +163,9 @@ class PdoMechnism extends AbstractMechnism
         $this->lockMode = isset($options['lock_mode']) ? $options['lock_mode'] : $this->lockMode;
     }
 
+    /**
+     * @return void
+     */
     private function connect()
     {
         $this->pdo = new PDO($this->dsn, $this->username, $this->password, $this->connectionOptions);
@@ -159,6 +173,9 @@ class PdoMechnism extends AbstractMechnism
         $this->driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($key)
     {
         try {
@@ -171,6 +188,9 @@ class PdoMechnism extends AbstractMechnism
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function set($sessionId, $data)
     {
         $lifetime = intval($this->lifetime);
@@ -228,6 +248,9 @@ class PdoMechnism extends AbstractMechnism
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     private function doRead($sessionId)
     {
         $this->sessionExpired = false;

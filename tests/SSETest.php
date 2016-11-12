@@ -2,7 +2,7 @@
 /**
  * libSSE-php
  *
- * Copyright (C) Tony Yip 2016.
+ * Copyright (C) Licson Lee, Tony Yip 2016.
  *
  * Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software
@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -53,7 +54,7 @@ class SSETest extends \PHPUnit_Framework_TestCase
         $request = Request::create('/', 'GET', array(), array(), array(), array('HTTP_LAST_EVENT_ID' => 5));
         $sse = new SSE($request);
         $this->assertAttributeEquals(5, 'id', $sse);
-        $this->assertEquals(true, $sse->is_reconnect);
+        $this->assertTrue($sse->is_reconnect);
     }
 
     public function testCreateResponse()
@@ -86,6 +87,32 @@ class SSETest extends \PHPUnit_Framework_TestCase
     {
         $sse = new SSE();
         $sse->start();
+    }
+
+    public function testHasEventListener()
+    {
+        $sse = new SSE();
+        $this->assertFalse($sse->hasEventListener());
+    }
+
+    public function testGetEventListener()
+    {
+        $sse = new SSE();
+        $this->assertEquals(array(), $sse->getEventListeners());
+    }
+
+    public function testSetStart()
+    {
+        $sse = new SSE();
+        $sse->setStart(123456);
+        $this->assertAttributeEquals(123456, 'start', $sse);
+    }
+
+    public function testGetStart()
+    {
+        $sse = new SSE();
+        $sse->setStart(123456);
+        $this->assertEquals(123456, $sse->getStart());
     }
 }
 

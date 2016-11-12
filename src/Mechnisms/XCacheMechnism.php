@@ -2,7 +2,7 @@
 /**
  * libSSE-php
  *
- * Copyright (C) Tony Yip 2016.
+ * Copyright (C) Licson Lee, Tony Yip 2016.
  *
  * Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software
@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -37,8 +38,15 @@ namespace Sse\Mechnisms;
 class XCacheMechnism extends AbstractMechnism
 {
 
+    /**
+     * @var int
+     */
     protected $lifetime = 0;
 
+    /**
+     * @param array $parameter
+     * @return void
+     */
     public function __construct(array $parameter)
     {
         if (!extension_loaded('xcache')) {
@@ -47,21 +55,33 @@ class XCacheMechnism extends AbstractMechnism
         parent::__construct($parameter);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function has($key)
     {
         return xcache_isset($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function set($key, $value)
     {
         return xcache_set($key, $value, $this->lifetime);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($key)
     {
         return xcache_get($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($key)
     {
         return xcache_unset($key);

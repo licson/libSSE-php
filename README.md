@@ -16,6 +16,7 @@ Run `composer require tonyhhyip/sse`
 
 Server-side(PHP):
 
+```php
 	<?php
 	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
 	
@@ -23,7 +24,7 @@ Server-side(PHP):
 	use Sse\SSE;
 	
 	//create the event handler
-	class YourEventHandler implements SSEEvent {
+	class YourEventHandler implements Event {
 		public function update(){
 			//Here's the place to send data
 			return 'Hello, world!';
@@ -35,18 +36,20 @@ Server-side(PHP):
 		}
 	}
 	
-	$sse = new SSE();//create a libSSE instance
-	$sse->addEventListener('event_name',new YourEventHandler());//register your event handler
+	$sse = new SSE(); //create a libSSE instance
+	$sse->addEventListener('event_name', new YourEventHandler());//register your event handler
 	$sse->start();//start the event loop
 	?>
+```
 
 Client-side(javascript):
-
+```javascript
 	var sse = new EventSource('path/to/your/sse/script.php');
 	sse.addEventListener('event_name',function(e){
 		var data = e.data;
 		//handle your data here
 	},false);
+```
 
 
 
@@ -55,6 +58,20 @@ Client-side(javascript):
 After you created the libSSE instance, there's some settings for you to control the behaviour.
 Below is the settings provided by the library.
 
+```php
+
+<?php
+	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
+	
+	use Sse\SSE;
+	
+	$sse = new SSE();
+    $sse->set($property, $value);
+```
+
+
+Direct access of property is kept with magic method for backward compatible.
+```php
 	<?php
 	require_once('/path/to/vendor/autoload.php'); //Load with ClassLoader
 	
@@ -94,6 +111,9 @@ You may find it here.
 This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
 
 ## Compatibility
+```
+Compatibility
+==============
 
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
 However, polyfill for server-sent events is available.
@@ -103,6 +123,7 @@ There's some settings in the library that can fix it.
 ## Integration with Frameworks
 
 ### Symfony
+```php
 
     <?php
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -121,7 +142,7 @@ There's some settings in the library that can fix it.
             return $sse->createResponse();
         }
     }
-    
+ ```   
 ### Laravel
 Please use [laravel-sse](https://github.com/tonyhhyip/laravel-sse).
 

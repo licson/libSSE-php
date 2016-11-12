@@ -2,7 +2,7 @@
 /**
  * libSSE-php
  *
- * Copyright (C) Tony Yip 2016.
+ * Copyright (C) Licson Lee, Tony Yip 2016.
  *
  * Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software
@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -43,6 +44,10 @@ class MockSessionMechnism extends AbstractMechnism
      */
     private $session;
 
+    /**
+     * @param array $param
+     * @return void
+     */
     public function __construct(array $param)
     {
         parent::__construct($param);
@@ -53,6 +58,9 @@ class MockSessionMechnism extends AbstractMechnism
         $this->session = $param['interface'];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function get($key)
     {
         if (!$this->session->isStarted())
@@ -63,6 +71,9 @@ class MockSessionMechnism extends AbstractMechnism
         return $value;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function set($key, $value)
     {
         try {
@@ -79,6 +90,9 @@ class MockSessionMechnism extends AbstractMechnism
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function delete($key)
     {
         if (!$this->session->isStarted()) {
@@ -89,6 +103,9 @@ class MockSessionMechnism extends AbstractMechnism
         $this->session->save();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function has($key)
     {
         if (!$this->session->isStarted()) {

@@ -2,7 +2,7 @@
 /**
  * libSSE-php
  *
- * Copyright (C) Tony Yip 2016.
+ * Copyright (C) Licson Lee, Tony Yip 2016.
  *
  * Permission is hereby granted, free of charge,
  * to any person obtaining a copy of this software
@@ -28,6 +28,7 @@
  *
  * @category libSSE-php
  * @author   Licson Lee <licson0729@gmail.com>
+ * @author   Tony Yip <tony@opensource.hk>
  * @license  http://opensource.org/licenses/MIT MIT License
  */
 
@@ -36,11 +37,27 @@ namespace Sse;
 
 interface DataInterface
 {
+    /**
+     * @param string $key
+     * @return mixed
+     */
     public function get($key);
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     public function set($key, $value);
 
+    /**
+     * @param string $key
+     */
     public function delete($key);
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function has($key);
 }
