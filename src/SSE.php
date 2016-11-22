@@ -137,9 +137,10 @@ class SSE implements ArrayAccess
     /**
      * Start the event loop
      *
-     * @return null
+     * @return void
      */
-    public function start(){
+    public function start()
+    {
         $response = $this->createResponse();
         $response->send();
     }
