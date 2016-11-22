@@ -1,6 +1,14 @@
 CHANGELOG
 ===========
 
+## 3.0.0
+ 
+ * Update Dependency to Symfony 3
+ * Use Bracket array syntax
+ * Remove deprecated functions (Utils::sseData, Utils::sseBlock, Utils::sseSend)
+ * Direct use this keyword in closure
+ * Add deprecate methods SSE::__get, SSE::__set, SSE::getNewId, SSE::setStart
+
 ## 2.1.1
 
  * Fix X-Accel-Buffering syntax.
