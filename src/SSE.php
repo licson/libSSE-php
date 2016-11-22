@@ -63,7 +63,7 @@ class SSE implements ArrayAccess
      * Config Setting
      * @var array
      */
-    private $config = array(
+    private $config = [
         'sleep_time' => 0.5,                // seconds to sleep after the data has been sent
         'exec_limit' => 600,                // the time limit of the script in seconds
         'client_reconnect' => 1,            // the time client to reconnect after connection has lost in seconds
@@ -71,7 +71,7 @@ class SSE implements ArrayAccess
         'keep_alive_time' => 300,           // The interval of sending a signal to keep the connection alive
         'is_reconnect' => false,            // A read-only flag indicates whether the user reconnects
         'use_chunked_encoding' => false,    // Allow chunked encoding
-    );
+    ];
 
     /**
      * SSE constructor.
@@ -228,7 +228,7 @@ class SSE implements ArrayAccess
         $that = $this;
         $callback = function () use ($that) {
             $that->setStart(time());
-            echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	// Set the retry interval for the client
+            echo 'retry: ' . ($that->get('client_reconnect') * 1000) . "\n";	// Set the retry interval for the client
             while (true) {
                 // Leave the loop if there are no more handlers
                 if (!$that->hasEventListener()) {
@@ -254,7 +254,7 @@ class SSE implements ArrayAccess
                 }
 
                 // Break if the time exceed the limit
-                if ($that->exec_limit !== 0 && $that->getUptime() > $that->exec_limit) {
+                if ($that->exec_limit !== 0 && $that->getUptime() > $that->get('exec_limit')) {
                     break;
                 }
                 // Sleep
@@ -263,11 +263,11 @@ class SSE implements ArrayAccess
         };
 
 
-        $response = new StreamedResponse($callback, Response::HTTP_OK, array(
+        $response = new StreamedResponse($callback, Response::HTTP_OK, [
             'Content-Type' => 'text/event-stream',
             'Cache-Control' => 'no-cache',
             'X-Accel-Buffering' => 'no' // Disables FastCGI Buffering on Nginx
-        ));
+        ]);
 
         if($this->allow_cors){
             $response->headers->set('Access-Control-Allow-Origin', '*');
@@ -355,7 +355,7 @@ class SSE implements ArrayAccess
      */
     public function set($key, $value)
     {
-        if (in_array($key, array('is_reconnect'))) {
+        if (in_array($key, ['is_reconnect'])) {
             throw new \InvalidArgumentException('is_reconnected is an read-only flag');
         }
         $this->config[$key] = $value;
@@ -413,7 +413,12 @@ class SSE implements ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        $keys = array('sleep_time', 'exec_limit', 'client_reconnect', 'allow_cors', 'keep_alive_time', 'is_reconnect', 'use_chunked_encoding');
+        $keys = [
+            'sleep_time', 'exec_limit',
+            'client_reconnect', 'allow_cors',
+            'keep_alive_time', 'is_reconnect',
+            'use_chunked_encoding'
+        ];
         if (in_array($offset, $keys)) {
             throw new \InvalidArgumentException($offset . ' is not allowed to removed');
         }

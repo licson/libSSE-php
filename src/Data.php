@@ -60,7 +60,7 @@ class Data implements DataInterface
      * @param array $credinals
      * @return void
      */
-    public function __construct($mechnism, array $credinals = array())
+    public function __construct($mechnism, array $credinals = [])
     {
         if (!static::$initial)
             static::fireOnInitial();
