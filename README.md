@@ -146,5 +146,9 @@ There's some settings in the library that can fix it.
 ### Laravel
 Please use [laravel-sse](https://github.com/tonyhhyip/laravel-sse).
 
+
+### Yii2
+Please use [yii2-sse](https://github.com/odannyc/yii2-sse).
+
 ## Contribution
 Please see the [CONTRIBUTING.md](CONTRIBUTING.md).
