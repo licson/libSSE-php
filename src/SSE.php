@@ -226,7 +226,7 @@ class SSE implements ArrayAccess
     {
         $this->init();
         $callback = function () {
-            $this->setStart(time());
+            $this->start = time();
             echo 'retry: ' . ($this->get('client_reconnect') * 1000) . "\n";	// Set the retry interval for the client
             while (true) {
                 // Leave the loop if there are no more handlers
@@ -244,8 +244,8 @@ class SSE implements ArrayAccess
                 foreach ($this->getEventListeners() as $event => $handler) {
                     if ($handler->check()) { // Check if the data is avaliable
                         $data = $handler->update(); // Get the data
-                        $id = $this->getNewId();
-                        $this->sendBlock($id, $data, $event);
+                        $this->id += 1;
+                        $this->sendBlock($this->id, $data, $event);
                         
                         // Make sure the data has been sent to the client
                         $this->flush();
@@ -283,6 +283,7 @@ class SSE implements ArrayAccess
      * Get the id for new message
      *
      * @return int
+     * @deprecated Just for PHP 5.3, remove in version 3.1
      */
     public function getNewId()
     {
@@ -313,6 +314,10 @@ class SSE implements ArrayAccess
         ob_implicit_flush(1);
     }
 
+    /**
+     * @param int $start
+     * @deprecated Just for PHP 5.3, remove in version 3.1
+     */
     public function setStart($start)
     {
         $this->start = $start;
