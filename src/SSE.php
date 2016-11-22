@@ -225,40 +225,39 @@ class SSE implements ArrayAccess
     public function createResponse()
     {
         $this->init();
-        $that = $this;
-        $callback = function () use ($that) {
-            $that->setStart(time());
-            echo 'retry: ' . ($that->get('client_reconnect') * 1000) . "\n";	// Set the retry interval for the client
+        $callback = function () {
+            $this->setStart(time());
+            echo 'retry: ' . ($this->get('client_reconnect') * 1000) . "\n";	// Set the retry interval for the client
             while (true) {
                 // Leave the loop if there are no more handlers
-                if (!$that->hasEventListener()) {
+                if (!$this->hasEventListener()) {
                     break;
                 }
 
-                if ($that->isTick()) {
+                if ($this->isTick()) {
                     // No updates needed, send a comment to keep the connection alive.
                     // From https://developer.mozilla.org/en-US/docs/Server-sent_events/Using_server-sent_events
                     echo ': ' . sha1(mt_rand()) . "\n\n";
                 }
                 
                 // Start to check for updates
-                foreach ($that->getEventListeners() as $event => $handler) {
+                foreach ($this->getEventListeners() as $event => $handler) {
                     if ($handler->check()) { // Check if the data is avaliable
                         $data = $handler->update(); // Get the data
-                        $id = $that->getNewId();
-                        $that->sendBlock($id, $data, $event);
+                        $id = $this->getNewId();
+                        $this->sendBlock($id, $data, $event);
                         
                         // Make sure the data has been sent to the client
-                        $that->flush();
+                        $this->flush();
                     }
                 }
 
                 // Break if the time exceed the limit
-                if ($that->exec_limit !== 0 && $that->getUptime() > $that->get('exec_limit')) {
+                if ($this->get('exec_limit') !== 0 && $this->getUptime() > $this->get('exec_limit')) {
                     break;
                 }
                 // Sleep
-                $that->sleep();
+                $this->sleep();
             }
         };
 
@@ -269,12 +268,12 @@ class SSE implements ArrayAccess
             'X-Accel-Buffering' => 'no' // Disables FastCGI Buffering on Nginx
         ]);
 
-        if($this->allow_cors){
+        if($this->get('allow_cors')){
             $response->headers->set('Access-Control-Allow-Origin', '*');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
         }
 
-        if($this->use_chunked_encoding)
+        if($this->get('use_chunked_encoding'))
             $response->headers->set('Transfer-encoding', 'chunked');
 
         return $response;
@@ -341,6 +340,7 @@ class SSE implements ArrayAccess
      * @param string $key
      *
      * @return mixed
+     * @deprecated Will remove in 3.1, use SSE::get instead
      */
     public function __get($key)
     {
@@ -366,6 +366,7 @@ class SSE implements ArrayAccess
      * @param string $key
      * @param mixed $value
      * @return void
+     * @deprecated Will remove in 3.1, use SSE::set instead
      */
     public function __set($key, $value)
     {
