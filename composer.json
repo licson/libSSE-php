@@ -45,6 +45,7 @@
   },
 
   "suggest": {
-    "predis/predis": "For using RedisMechnism"
+    "predis/predis": "For using RedisMechnism",
+    "symfony/polyfill-apcu": "For APCMecnism on PHP < 7.0"
   }
 }
