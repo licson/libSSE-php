@@ -206,7 +206,7 @@ class SSE implements ArrayAccess
      */
     public function isTick()
     {
-        return $this->getUptime() % $this->keep_alive_time === 0;
+        return $this->getUptime() % $this->config['keep_alive_time'];
     }
 
     /**
@@ -214,7 +214,7 @@ class SSE implements ArrayAccess
      */
     public function sleep()
     {
-        usleep($this->sleep_time * 1000000);
+        usleep($this->config['sleep_time'] * 1000000);
     }
 
     /**
@@ -228,7 +228,7 @@ class SSE implements ArrayAccess
         $that = $this;
         $callback = function () use ($that) {
             $that->setStart(time());
-            echo 'retry: ' . ($that->client_reconnect * 1000) . "\n";	// Set the retry interval for the client
+            echo 'retry: ' . ($that->config['client_reconnect'] * 1000) . "\n";	// Set the retry interval for the client
             while (true) {
                 // Leave the loop if there are no more handlers
                 if (!$that->hasEventListener()) {
@@ -254,7 +254,7 @@ class SSE implements ArrayAccess
                 }
 
                 // Break if the time exceed the limit
-                if ($that->exec_limit !== 0 && $that->getUptime() > $that->exec_limit) {
+                if ($that->config['exec_limit'] !== 0 && $that->getUptime() > $that->config['exec_limit']) {
                     break;
                 }
                 // Sleep
@@ -269,12 +269,12 @@ class SSE implements ArrayAccess
             'X-Accel-Buffering' => 'no' // Disables FastCGI Buffering on Nginx
         ));
 
-        if($this->allow_cors){
+        if($this->config['allow_cors']){
             $response->headers->set('Access-Control-Allow-Origin', '*');
             $response->headers->set('Access-Control-Allow-Credentials', 'true');
         }
 
-        if($this->use_chunked_encoding)
+        if($this->config['use_chunked_encoding'])
             $response->headers->set('Transfer-encoding', 'chunked');
 
         return $response;
