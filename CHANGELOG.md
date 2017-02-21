@@ -1,6 +1,9 @@
 CHANGELOG
 ===========
 
+## 2.1.2
+ * Use apcu functions via polyfill for PHP 5.3+ compat
+
 ## 2.1.1
 
  * Fix X-Accel-Buffering syntax.
