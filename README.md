@@ -86,6 +86,7 @@ Direct access of property is kept with magic method for backward compatible.
 	$sse->keep_alive_time = 600; //The interval of sending a signal to keep the connection alive. Default: 300 seconds.
 	$sse->allow_cors = true; //Allow cross-domain access? Default: false. If you want others to access this must set to true.
 	?>
+```
 
 ## Updates
 
