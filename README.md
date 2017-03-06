@@ -112,9 +112,6 @@ You may find it here.
 This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
 
 ## Compatibility
-```
-Compatibility
-==============
 
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
 However, polyfill for server-sent events is available.
