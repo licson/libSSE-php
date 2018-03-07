@@ -1,6 +1,6 @@
 {
   "name": "tonyhhyip/sse",
-  "description": "An easy-to-use, object-orienlated library for Server-Sent Events",
+  "description": "An easy-to-use, object-oriented library for Server-Sent Events",
   "version": "2.1.1",
   "type": "library",
   "keywords": ["sse"],
