@@ -8,6 +8,11 @@ php:
   - hhvm
   - nightly
 
+matrix:
+  include:
+    - php: '5.3'
+      dist: precise
+
 install:
   - cat composer.json
   - composer self-update
