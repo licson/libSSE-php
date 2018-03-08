@@ -86,6 +86,7 @@ Direct access of property is kept with magic method for backward compatible.
 	$sse->keep_alive_time = 600; //The interval of sending a signal to keep the connection alive. Default: 300 seconds.
 	$sse->allow_cors = true; //Allow cross-domain access? Default: false. If you want others to access this must set to true.
 	?>
+```
 
 ## Updates
 
@@ -111,9 +112,6 @@ You may find it here.
 This is an active project. If you want to help me please suggest ideas to me and track issues or find bugs. If you like it, please consider star it to let more people know.
 
 ## Compatibility
-```
-Compatibility
-==============
 
 Because server-sent events is a new standard and still in flux, only certain browsers support it.
 However, polyfill for server-sent events is available.
