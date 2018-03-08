@@ -65,7 +65,7 @@ class Data implements DataInterface
         if (!static::$initial)
             static::fireOnInitial();
 
-        if (!array_key_exists($mechnism, static::$registers) || count(static::$registers[$mechnism]) === 0)
+        if (!array_key_exists($mechnism, static::$registers) || empty(static::$registers[$mechnism]))
             throw new \InvalidArgumentException("$mechnism Mechnism has not been registered");
 
         $mechnism = static::$registers[$mechnism];
