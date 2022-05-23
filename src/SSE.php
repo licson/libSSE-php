@@ -378,6 +378,7 @@ class SSE implements ArrayAccess
      * @param string $offset
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->config[$offset]);
@@ -388,6 +389,7 @@ class SSE implements ArrayAccess
      * @param string $offset
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -400,6 +402,7 @@ class SSE implements ArrayAccess
      * @param mixed $value
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
@@ -411,6 +414,7 @@ class SSE implements ArrayAccess
      * @param  string $offset
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $keys = array('sleep_time', 'exec_limit', 'client_reconnect', 'allow_cors', 'keep_alive_time', 'is_reconnect', 'use_chunked_encoding');
