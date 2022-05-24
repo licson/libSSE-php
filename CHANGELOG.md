@@ -1,7 +1,13 @@
 CHANGELOG
 ===========
 
+## 2.2.0
+
+ * Add PHP 8 attribute `ReturnTypeWillChange`
+ * Fix `ob_flush` no buffer to flush issue
+
 ## 2.1.2
+
  * Use apcu functions via polyfill for PHP 5.3+ compat
 
 ## 2.1.1
